@@ -1,0 +1,437 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{color}
+\usepackage[document]{ragged2e}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage[%
+	pdftitle={CO250 Notes},%
+	hidelinks,%
+]{hyperref}
+
+\begin{document}
+
+    
+    \clearpage
+    \vspace*{\fill}
+    \begin{center}
+        \begin{minipage}{\textwidth} 
+            \title{CO250 Spring 2020}
+            \author{Jacky Zhao}
+            \date{\today}
+            \maketitle
+        \end{minipage} 
+    \end{center}
+    \vfill
+    \thispagestyle{empty}
+    \newpage
+    \setcounter{page}{1}
+
+    \section{Introduction}
+    \subsection{Abstract Optimization Problem}
+    An \textit{abstract optimization problem (P)} is of the following form:
+    \begin{itemize}
+        \item {\color{red}Given}: a set $\textbf{A} \subseteq \mathbb{R}^n$ and a function $f:\textbf{A} \rightarrow \mathbb{R}$
+        \item {\color{red}Goal}: find $x \in \textbf{A}$ that minimizes/maximizes $f$
+        \item {\color{red}Bad news}: Hard to solve \& may not be well defined
+    \end{itemize}
+    
+    \bigskip
+    We look at 3 special cases of (P) in this course:
+    \begin{enumerate}
+        \item {\color{red}Linear Programming (LP)}
+        \begin{itemize}
+            \item $\textbf{A}$ is simply given by \textit{linear} constrains, and $f$ is a \textit{linear} function
+        \end{itemize}
+        \item {\color{red}Integer Programming (IP)}
+        \begin{itemize}
+            \item Same as above, but now we want max/min over the \textit{integer} points in $\textbf{A}$
+        \end{itemize}
+        \item {\color{red}Non-linear Programming (NLP)}
+        \begin{itemize}
+            \item $\textbf{A}$ is given by \textit{non-linear} constrains, and $f$ is a \textit{non-linear} function
+        \end{itemize}
+    \end{enumerate}
+    
+    \subsubsection{Example: Water Tech}
+    WaterTech produces 4 products, $P = \{1, 2, 3, 4\}$, from the following resources:\\
+    \begin{itemize}
+        \item time on two machines
+        \item skilled and unskilled labour
+    \end{itemize}
+    The following table gives precise requirements:\\
+
+    \bigskip
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Product & Machine 1 & Machine 2 & Skilled Labour & Unskilled Labour & Unit Sale Price\\
+        \hline
+        1 & 11 & 4 & 8 & 7 & 300\\
+        \hline
+        2 & 7 & 6 & 5 & 8 & 260\\
+        \hline
+        3 & 6 & 5 & 5 & 7 & 220\\
+        \hline
+        4 & 5 & 4 & 6 & 4 & 180\\
+        \hline
+    \end{tabular}
+    \bigskip
+    
+    {\color{red} Restrictions:}\\
+    \begin{itemize}
+        \item WaterTech has 700h on machine 1 and 500h on machine 2 available
+        \item it can purchase 600h of skilled labour at \$8 per hour and at most 650h of unskilled labour at \$6 per hour
+    \end{itemize}
+    {\color{red} Question:}\\
+    How much of each product should WaterTech produce in order to maximize profit?\\
+    \pagebreak
+    \subsection{Ingredients of a math model:}
+    \begin{itemize}
+        \item {\color{red}Decision variables:} Capture unknown information
+        \item {\color{red}Constraints:} Describe which assignments to variables are {\color{red}feasible}
+        \item {\color{red}Objective function:} A function of the variables that we would like to maximize/minimize
+    \end{itemize}
+
+    \subsection{Variables}
+
+    WaterTech needs to decide how many units of each product to produce, so introduce some variables:
+    \begin{itemize}
+        \item $x_i$ for number of labour to purchase
+        \item $y_s$, $y_u$ for number of hours of skilled/unskilled labour to purchase
+    \end{itemize}
+
+    \subsection{Constrains}
+    What makes an assignment to $\{x_i\} \in P, y_s, y_u$ a feasible assignment?\\
+    \bigskip
+    For example, a production plan described by an assignment may not use more than 700h of time on machine 1
+    $$11x_1 + 7x_2 + 6x_3 + 5x_4 \leq 700$$
+
+    Similarly, we may not use more than 500h of machine 2 time
+    $$4x_1 + 6x_2 + 5x_3 + 4x_4 \leq 500$$
+
+    Producing $x_i$ units of product $i \in P$ must require less than $y_s$ units of skilled labour
+    $$8x_1 + 5x_2 + 5x_3 + 6x_4 \leq y_s$$
+
+    Similar story for unskilled labour:
+    $$7x_1 + 8x_2 + 7x_3 + 5x_4 \leq y_u$$
+
+    Since amount of labour that can be purchased is limited, we also have
+    $$y_s \leq 600$$
+    $$y_u \leq 650$$
+
+    \subsection{Objective Function}
+    Revenue from sales:\\
+    $$300x_1 + 260x_2 + 220x_3 + 180x_4$$
+
+    Cost of labour:\\
+    $$8y_s + 6y_u$$
+
+    Objective Function:\\
+    {\begin{center}
+        maximize $300x_1 + 260x_2 + 220x_3 + 180x_4 - 8y_s - 6y_u$
+    \end{center}
+    \pagebreak
+    
+    {\large\textbf{The complete model for WaterTech problem is:}}\\
+    \begin{center}
+        \begin{tabular}{r l}
+            max & $300x_1 + 260x_2 + 220x_3 + 180x_4 - 8y_s - 6y_u$\\
+            s.t & $11x_1 + 7x_2 + 6x_3 + 5x_4 \leq 700$\\
+            & $4x_1 + 6x_2 + 5x_3 + 4x_4 \leq 500$\\
+            & $8x_1 + 5x_2 + 5x_3 + 6x_4 \leq y_s$\\
+            & $7x_1 + 8x_2 + 7x_3 + 5x_4 \leq y_u$\\
+            & $y_s \leq 600$\\
+            & $y_u \leq 650$\\
+            & $x_1, x_2, x_3, x_4, y_u, y_s \geq 0$\\
+        \end{tabular}
+    \end{center}
+
+    Solution obtained via CPLEX is:\\
+    \begin{align*}
+        x &= (16 + \frac{2}{3}, 50, 0, 33 + \frac{1}{3})^T\\
+        y_s &= 583 + \frac{1}{3}\\
+        y_u &= 650\\
+        Profit &= 15433 + \frac{1}{3}
+    \end{align*}
+
+    Notice that the solution is fractional, which may or may not be correct depending on the question\\
+    \bigskip
+    \subsection{Correctness of Model}
+    First, define some terminologies:\\
+    \begin{itemize}
+        \item Word description of problem
+        \begin{itemize}
+            \item Similarly, a solution to the word description is an assignment to the unknowns\\
+        \end{itemize}
+        \item Formulation
+        \begin{itemize}
+            \item A solution to the formulation is an assignment to all of its variables\\
+        \end{itemize}
+    \end{itemize}
+    
+    A solution feasible if all constrains are satisfied, optimal if no other feasible solution exists\\
+    \bigskip
+    One way to show correctness is to define a mapping between feasible solutions to the word description, and feasible solutions to the model, and vice versa.\\
+    \pagebreak
+
+    \section{Linear Program Model (LP)}
+
+    \subsection{Linear Functions}
+    Affine Functions
+    \begin{itemize}
+        \item A function $f : \mathbb{R}^n \rightarrow \mathbb{R}$ is affine if $f(x) = \alpha^Tx + \beta$ for $\alpha \in \mathbb{R}^n, \beta \in \mathbb{R}$
+    \end{itemize}
+    Linear Functions
+    \begin{itemize}
+        \item An affine function with $\beta = 0$
+    \end{itemize}
+
+    \subsection{Linear Program}
+    Linear Program
+    \begin{itemize}
+        \item the optimization problem $$max/min\{f(x):f_i(x) \leq b_i, \forall1 \leq i \leq m, x \in \mathbb{R}^n\}$$ is a linear program if $f$ is affine and $g_1,...,g_m$ is finite number of linear functions\\
+    \end{itemize}
+    
+    \bigskip
+    Some notes:
+    \begin{itemize}
+        \item dividing by variables is not allowed in LP
+        \item can NOT have strict inequalities
+        \item must have FINITE number of constraints
+    \end{itemize}
+    
+    Example:\\
+    \bigskip
+    \begin{tabular}{rl}
+        max & $\frac{-1}{x_1} - x_3$\\
+        s.t. & $2x_1 + x_3 < 3$\\
+        &$x_1 + \alpha x_2 = 2\hspace{1cm}\forall\alpha\in\mathbb{R}$\\
+    \end{tabular}
+    \bigskip
+
+    Going back to the WaterTech problem, the model we created was in fact a linear program!\\
+
+    \subsection{LP Models: Multiperiod Models}
+    A multiperiod model is a problem where:\\
+    \begin{itemize}
+        \item time is split into periods
+        \item we have to make a decision in each period
+        \item all decisions influences the final outcome
+    \end{itemize}
+    Example:\\
+    KW Oil is a local supplier of heating oil, it needs to decide how much oil to purchase in order to satisfy demand of its customers.\\
+    \bigskip
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Month & 1 & 2 & 3 & 4\\
+        \hline
+        Demand($l$) & 5000 & 8000 & 9000 & 6000\\
+        \hline
+        Price(\$/$l$) & 0.75 & 0.72 & 0.92 & 0.90\\
+        \hline
+    \end{tabular}
+    \bigskip
+
+    Question: When should we purchase how much oil when the goal is to min overall total cost?\\
+    Additional Complication: The company has a storage tank that\\
+    \begin{itemize}
+        \item has a capacity of 4000 litres of oil
+        \item currently (beginning of month 1) contains 2000 litres of oil
+    \end{itemize}
+    Assumption: Oil is delivered at the beginning of the month, and consumption occurs int he middle of the month
+
+    \bigskip
+    {\large\textbf{Variables}}
+    \begin{itemize}
+        \item Need to decide how many litres of oil to purchase in each month $i$
+        \begin{itemize}
+            \item make variable $p_i$ for $i \in [4]$
+        \end{itemize}
+        \item How much oil is stored in the tank at the beginning of month $i$?
+        \begin{itemize}
+            \item make variable $t_i$ for $i \in [4]$
+        \end{itemize}
+    \end{itemize}
+
+    {\large\textbf{Objective Function}}\\
+    Minimize cost of oil purchased
+    $$min\hspace{1cm} 0.75p_1 + 0.72p_2 + 0.92p_3 + 0.90p_4$$
+
+    {\large\textbf{Constrains}}\\
+    We need 
+    \begin{center}
+        $p_i + t_i \geq$ (demand in month $i$)\\
+    \end{center}
+    Balancing equation we get
+    \begin{center}
+        $p_i + t_i = $ (demand in month $i$) $ + t_{i+1}$\\
+    \end{center}
+
+    So we have the following four constrains
+    \begin{align*}
+        p_1 + 2000 & = 5000 + t_2\\
+        p_2 + t2 & =  5000 + t_3\\
+        p_3 + t3 & =  5000 + t_4\\
+        p_4 + t4 & \geq  6000
+    \end{align*}
+
+    {\large\textbf{Complete LP for KW Oil}}\\
+    \bigskip
+    \begin{tabular}{rl}
+        min & $0.75p_1 + 0.72p_2 + 0.92p_3 + 0.90p_4$\\
+        s.t. & {$\begin{aligned}[t]
+            p_1 + 2000 & = 5000 + t_2\\
+            p_2 + t2 & =  5000 + t_3\\
+            p_3 + t3 & =  5000 + t_4\\
+            p_4 + t4 & \geq  6000\\
+            t_1 &= 2000\\
+            t_i &\leq 4000 \hspace{1cm} (i=2, 3, 4)\\
+            t_1, p_i &\geq 0 \hspace{1cm} (i=1, 2, 3, 4) \end{aligned}$}
+    \end{tabular}
+    \bigskip
+    
+    Solving the LP gives the solution:\\
+    $p = (3000,12000,5000,6000)^T$\\
+    $t = (2000, 0, 4000, 0)^T$
+
+    \pagebreak
+    \section{Integer Program (IP)}
+    Recall the WaterTech problem\\
+    \begin{center}
+        \begin{tabular}{r l}
+            max & $300x_1 + 260x_2 + 220x_3 + 180x_4 - 8y_s - 6y_u$\\
+            s.t & $11x_1 + 7x_2 + 6x_3 + 5x_4 \leq 700$\\
+            & $4x_1 + 6x_2 + 5x_3 + 4x_4 \leq 500$\\
+            & $8x_1 + 5x_2 + 5x_3 + 6x_4 \leq y_s$\\
+            & $7x_1 + 8x_2 + 7x_3 + 5x_4 \leq y_u$\\
+            & $y_s \leq 600$\\
+            & $y_u \leq 650$\\
+            & $x_1, x_2, x_3, x_4, y_u, y_s \geq 0$\\
+        \end{tabular}
+    \end{center}
+
+    \begin{align*}
+        x &= (16 + \frac{2}{3}, 50, 0, 33 + \frac{1}{3})^T\\
+        y_s &= 583 + \frac{1}{3}\\
+        y_u &= 650\\
+        Profit &= 15433 + \frac{1}{3}
+    \end{align*}
+
+    Fractional solutions are often not desirable! Can we force the solution to be integer?\\
+    \bigskip
+    {\large\textbf{Integer Program}}\\
+    \begin{itemize}
+        \item an integer program is a linear program with added integrality constraints for some/all the variables
+        \item we call an IP mixed if there are integer and fractional variables, and pure otherwise
+        \item the difference between LPs and IPs is subtle, but LPs are easy to solve, IPs are not!
+    \end{itemize}
+
+    \subsection{IP Models: Knapsack}
+    Example:\\
+    KitchTech Shipping is a company wishes to ship crates from Toronto to Kitchener.
+    Each crate type has a weight and value, and the total weight of crates shipped must not exceed 10,000 lbs.\\
+    Goal: Maximize the total value of shipped goods.\\
+    \bigskip
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            Type & 1 & 2 & 3 & 4 & 5 & 6\\
+            \hline
+            weight (lbs) & 30 & 20 & 30 & 90 & 30 & 70\\
+            \hline
+            value (\$) & 60 & 70 & 40 & 70 & 20 & 90\\
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \bigskip
+    \textbf{Variables:}\\
+    One variable $x_i$ for the number of crates of type $i$ to pack.\\
+    \bigskip
+    \textbf{Constraints:}\\
+    The total weight of crates picked must not exceed 10000 lbs.\\
+    $$30x_1 + 20x_2 + 30x_3 + 90x_4 + 30x_5 + 70x_6 \leq 10000$$
+    \textbf{Objective function:}\\
+    Maximize the total value\\
+    $$max \hspace{1cm} 60x_1 + 70x_2 + 40x_3 + 70x_4 + 20x_5 + 90x_6$$
+
+    \textbf{Complete IP model for KitchTech Shipping:}\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $60x_1 + 70x_2 + 40x_3 + 70x_4 + 20x_5 + 90x_6$\\
+            s.t. & $30x_1 + 20x_2 + 30x_3 + 90x_4 + 30x_5 + 70x_6 \leq 10000$\\
+            & $x_i \geq 0 \hspace{1cm} (i\in[6])$\\
+            & $x_i$ integer $(i \in [6])$\\
+        \end{tabular} 
+    \end{center}
+    
+    Let's make this shit more complicated with more rules...\\
+    Suppose that:
+    \begin{enumerate}
+        \item we must not send more than 10 crates of the same type
+        \item we can only send crates of type 3, if we send at least 1 crate of type 4
+    \end{enumerate}}
+    Note that we can send at most 10 crates of type 3 by the previous constraints!\\
+    By adding the following constraint, the added requirements is fulfilled:
+    $$ x_3 \leq 10x_4$$
+    \textbf{proving correctness of the added constraint:}
+    \begin{itemize}
+        \item $x_4 \geq 1 \rightarrow$  new constraint is redundant
+        \item $x_4 = 0 \rightarrow$  new constraint becomes $x_3 \leq 0$
+    \end{itemize}
+
+    Suppose we add another rule where we must:\\
+    \begin{enumerate}
+        \item take a total of at least 4 crates of type 1 or 2, or
+        \item take at least 4 crates of type 5 or 6
+    \end{enumerate}
+
+    \textbf{strategy:}\\
+    Create a new variable y such that:
+    \begin{itemize}
+        \item $y = 1 \rightarrow x_1 + x_2 \geq 4$
+        \item $y = 0 \rightarrow x_5 + x_6 \geq 4$
+        \item and force $y$ to take on value 0 or 1
+    \end{itemize}
+
+    So we add the following constraints:\\
+    \begin{itemize}
+        \item $x_1 + x_2 \geq 4y$
+        \item $x_5 + x_6 \geq 4(1 - y)$
+        \item $0 \leq y \leq 1$
+        \item y integer
+    \end{itemize}
+
+    The variable $y$ we added is called a binary variable. These are very useful for modelling logical constraints of the form:\\
+    \begin{itemize}
+        \item Condition (A or B) and C $\rightarrow$ D
+    \end{itemize}
+
+    So the finalized model would be:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $60x_1 + 70x_2 + 40x_3 + 70x_4 + 20x_5 + 90x_6$\\
+            s.t. & $30x_1 + 20x_2 + 30x_3 + 90x_4 + 30x_5 + 70x_6 \leq 10000$\\
+            & $ x_3 \leq 10x_4$\\
+            & $x_1 + x_2 \geq 4y$\\
+            & $x_5 + x_6 \geq 4(1 - y)$\\
+            & $x_i \geq 0 \hspace{1cm} (i\in[6])$\\
+            & $0 \leq y \leq 1$\\
+            & y integer\\
+            & $x_i$ integer $(i \in [6])$\\
+        \end{tabular} 
+    \end{center}
+
+    \subsection{IP Models: Scheduling}
+    Example:\\
+    The neighborhood coffee shop is open on workdays.
+    
+
+\end{document}
