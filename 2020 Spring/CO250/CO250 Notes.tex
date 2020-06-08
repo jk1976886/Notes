@@ -11,10 +11,21 @@
 \usepackage{graphicx}
 \usepackage[shortlabels]{enumitem}
 \usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usetikzlibrary{arrows,shapes}
 \usepackage[%
 	pdftitle={CO250 Notes},%
 	hidelinks,%
 ]{hyperref}
+
+%make macro for coloured text
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\green}[1]{{\color{green}{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow}{#1}}}
+\newcommand{\purple}[1]{{\color{purple}{#1}}}
+\newcommand{\white}[1]{{\color{white}{#1}}}
 
 \begin{document}
 
@@ -339,6 +350,7 @@
         \item IPs are very unlikely to have efficient algorithms!
     \end{itemize}
 
+    \pagebreak
     \subsection{IP Models: Knapsack}
     Example:\\
     KitchTech Shipping is a company wishes to ship crates from Toronto to Kitchener.
@@ -387,6 +399,8 @@
     Note that we can send at most 10 crates of type 3 by the previous constraints!\\
     By adding the following constraint, the added requirements is fulfilled:
     $$ x_3 \leq 10x_4$$
+
+    \pagebreak
     \textbf{proving correctness of the added constraint:}
     \begin{itemize}
         \item $x_4 \geq 1 \rightarrow$  new constraint is redundant
@@ -434,7 +448,7 @@
             & $x_i$ integer $(i \in [6])$\\
         \end{tabular} 
     \end{center}
-
+    \pagebreak
     \subsection{IP Models: Scheduling}
     Example:\\
     The neighborhood coffee shop is open on workdays. The daily demand for workers is given in the table.
@@ -477,9 +491,206 @@
     \end{center}
     
     \pagebreak
+    \section{Optimization on graphs}
+    \subsection{Graph Theory 101:}
+    A graph G consist of:
+    \begin{itemize}
+        \item vertices $u,w,...\in V$ (circles)
+        \item edges $uw,wz,...\in E$ (lines connecting circles)
+    \end{itemize}
+    Two vertices $u$ and $v$ are adjacent if $uv \in E$.\\
+    Vertices $u$ and $v$ are the endpoints of edge $uv \in E$\\
+    An edge $e \in E$ is incident to $u \in V$ if $u$ is an endpoint of $e$.\\
+    \bigskip
+    An $s,t-path$ in $G = (V,E)$ is a sequence
+    $$v_1v_2,v_2v_3,v_3v_4,...,v_{k-2}v_{k-1},v_{k-1}v_k$$
+    Where\\
+    \begin{itemize}
+        \item $v_i \in V$ and $v_iv_{i+1} \in E$ for all $i$, and
+        \item $v_1 = s, v_k = t$ and $\underbrace{v_i \neq v_j \text{ for all } i \neq j}_{\text{Without this, it is called an s,t-walk}}$
+    \end{itemize}
+    The length of a path $P = v_1v_2,v_2v_3,v_3v_4,...,v_{k-1}v_k$ is the sum of the lengths of the edges on P
+    $$c(P) = \sum(c_e:e \in P)$$
     
+    \subsection{IP Models: Matchings}
+    Example:\\
+    WaterTech has a collection of important jobs that it needs to handle urgently.\\
+    It also has 4 employees that need to handle these jobs.\\
+    Employees have different skill-sets and may take different amount of times to execute a job, note that
+    some workers are not able to handle certain jobs!\\
+    \bigskip
+    \textbf{Goal:} Assign each worker to exactly one task so that the total execution time is smallest!\\
+    We will rephrase this in the language of graphs.\\
+    \bigskip
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \multirow{2}{*}{Employees} & \multicolumn{4}{|c|}{Jobs}\\
+            \cline{2-5}
+            & 1' & 2' & 3' & 4'\\
+            \hline
+            1 & - & 5 & - & 7\\
+            2 & 8 & - & - & 4\\
+            3 & - & 1 & - & -\\
+            4 & 8 & - & 3 & -\\
+            \hline
+        \end{tabular}
+    \end{center}
+    \bigskip
+
+    Create a graph with one vertex for each employee and job.\\
+    Add an edge $ij$ with cost $c_{ij}$ for $i \in E$ and $j \in J$ if employee $i$ can handle job $j$ in time $c_{ij}$\\
+
+    \begin{center}
+        \begin{tikzpicture}[shorten >=1pt,->]
+            \tikzstyle{vertex}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+          
+            \foreach \name/\x in {1/4, 2/3, 3/2, 4/1}
+              \node[vertex] (G-\name) at (0, 2*\x) {$\name$};
+    
+            \foreach \name/\x in {1'/4, 2'/3, 3'/2, 4'/1}
+              \node[vertex] (G-\name) at (7, 2*\x) {$\name$};
+          
+            \foreach \from/\to/\value in {1/2'/5, 2/4'/4, 4/1'/8,3/2'/1}
+              \draw (G-\from) -- (G-\to) node[pos=0.1, above] {\value};
+    
+            \foreach \from/\to/\value in {1/4'/7, 2/1'/8,  4/3'/3}
+              \draw (G-\from) -- (G-\to) node[pos=0.9, above] {\value};
+        \end{tikzpicture}
+    \end{center}
+    
+    \textbf{Matching}
+    \begin{itemize}
+        \item A collection $M \subseteq E$ is matching if no two edges $ij, i'j' \in M (ij \neq i'j')$ share an endpoint.
+        \item i.e. $\{ij\} \cap \{i'j'\} = 0$
+    \end{itemize}
+    For example:
+    \begin{itemize}
+        \item $M = \{14', 21', 32', 43'\}$ is a matching
+        \item $M = \{14', 32', 41', 43'\}$ is NOT a matching
+    \end{itemize}
+
+    The cost of a matching $M$ is the sum of costs of its edges:
+    $$c(M) = \sum (c_e : e \in M)$$
+
+    A matching $M$ is \red{perfect} if every vertex $v$ in the graph is incident to an edge in $M$\\
+    Note: a perfect matching correspond to feasible assignments of workers to jobs!\\
+    \bigskip
+    \textbf{More notations:}\\
+    Use $\delta(v)$ to denote the set of edges incident to $v$, i.e.:
+    $$ \delta(v) = \{e \in E : e = vu \text{ for some } u \in V\}$$
+    For example:\\
+    \begin{itemize}
+        \item $\delta(2) = \{21', 24'\}$
+        \item $\delta(3') = \{43'\}$
+    \end{itemize}
+    \pagebreak
+    So another definition of a \red{perfect matching} is:
+    \begin{itemize}
+        \item Given $G = (V,E), M \subseteq E$ is a perfect matching \red{iff $M \cap \delta(v)$ contains a single edge} for all $v \in V$
+    \end{itemize}
+
+    So the IP will have a binary variable $x_e$ for every edge $e \in E$, the idea is:\\
+    \begin{itemize}
+        \item $x_e = 1 \longleftrightarrow e \in M$
+    \end{itemize}
+
+    So the constraints for perfect matching is:\\
+    For all $v \in V$, we need
+    $$\sum (x_e : e \in \delta(v)) = 1$$
+    The objective function would be:\\
+    $$\sum(c_ex_e : e \in E)$$
+
+    \textbf{Complete IP for any perfect matching problem:}\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $\sum (c_ex_e : e\in E)$\\
+            s.t & $\sum (x_e : e \in \delta(v)) = 1 (v \in V)$\\
+            & $x \geq 0$, x is integer
+        \end{tabular}
+    \end{center}
+
+    \textbf{For the example question, we have:}\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $(5,1,3,4)x)$\\
+            s.t & \begin{tabular}{cccccccc}
+                & \multicolumn{6}{c}{\multirow{5}{*}{\begin{tabular} {@{}cccccc@{}}
+                    & 12 & 13 & 14 & 23 &\\
+                    \multirow{4}{*}{$\Big($}
+                    & 1 & 1 & 1 & 0 &
+                    \multirow{4}{*}{$\Big)$}\\
+                    & 1 & 0 & 0 & 1 &\\
+                    & 0 & 1 & 0 & 1 &\\
+                    & 0 & 0 & 1 & 0 &\\
+                \end{tabular}}}\\
+                1 &&&&&&&\multirow{4}{*}{$x = \mathbf{1}$}\\
+                2\\
+                3\\
+                4\\
+            \end{tabular}\\
+            & $x \geq 0$, x is integer
+        \end{tabular}
+    \end{center}
+
+    \subsection{Shortest Path Problem}
+
+    Input:\\
+    \begin{itemize}
+        \item Graph $G = (V,E)$
+        \item Non-negative \red{edge lengts} $c_e$ for all $e \in E$
+        \item Vertices $s,t \in V$
+    \end{itemize}
+
+    Goal: Compute an $s,t$-path of the smallest total length\\
+
+    \bigskip
+    The shortest path problem is:
+    \begin{itemize}
+        \item Given: Graph $G = (V,E)$, lengths $c_e \geq 0$ for all $e \in E$, and $s,t \in V$, compute an $s,t$-path of smallest total length
+    \end{itemize}
+    
+    Useful Observation:\\
+    \begin{itemize}
+        \item Let $C \in E$ be a set of edges whose removal \red{disconnects} $s$ and $t$
+    \end{itemize}
+    
+    For example:\\
+    
+    \begin{center}
+        \begin{tikzpicture}[shorten >=1pt,->]
+            \tikzstyle{vertex}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+          
+            \node[vertex] (G-s) at (0, 2) {s};
+            \node[vertex] (G-a) at (2, 4) {a};
+            \node[vertex] (G-b) at (2, 0) {b};
+            \node[vertex] (G-t) at (4, 2) {t};
+          
+            \draw (G-s) -- (G-a) node[pos=0.5, above] {3};
+            \draw (G-s) -- (G-b) node[pos=0.5, above] {4};
+            \draw (G-a) -- (G-t) node[pos=0.5, above] {2};
+            \draw (G-b) -- (G-t) node[pos=0.5, above] {2};
+            \draw (G-a) -- (G-b) node[pos=0.5, right] {1};
+        \end{tikzpicture}
+    \end{center}
+
+    Let $C = \{sb, ab, at\}$, notice that removing all edges in $C$ eliminates all paths from $s$ to $t$\\
+    Therefore, \red{every $s,t$-path must have at least one edge in $C$}\\
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
