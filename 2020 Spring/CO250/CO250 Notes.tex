@@ -332,6 +332,12 @@
         \item we call an IP mixed if there are integer and fractional variables, and pure otherwise
         \item the difference between LPs and IPs is subtle, but LPs are easy to solve, IPs are not!
     \end{itemize}
+    Integer program is provably difficult to solve!\\
+    \begin{itemize}
+        \item An algorithm is efficient if its running can be bounded by a polynomial of the input size of the instance\\
+        \item LPs can be solved efficiently
+        \item IPs are very unlikely to have efficient algorithms!
+    \end{itemize}
 
     \subsection{IP Models: Knapsack}
     Example:\\
@@ -431,7 +437,50 @@
 
     \subsection{IP Models: Scheduling}
     Example:\\
-    The neighborhood coffee shop is open on workdays.
+    The neighborhood coffee shop is open on workdays. The daily demand for workers is given in the table.
+    Each worker works for 4 consecutive days and has one day off.\\
+    Goal: Hire the smallest number of workers so that the demand can be met\\
+    \bigskip
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Mon & Tues & Wed & Thurs & Fri\\
+        \hline
+        3 & 5 & 9 & 2 & 7\\
+        \hline
+    \end{tabular}
     
+    \bigskip
+    \textbf{Variables:}\\
+    Introduce variable $x_d$ for every $d \in \{M,T,W,Th,F\}$ counting the number of people to hire with starting day $d$\\
+    \bigskip
+    \textbf{Objective function:}\\
+    Minimize the total number of people hired:\\
+    $$min \hspace{1cm} x_M + x_T + x_W + x_{Th} + x_F$$
+    \textbf{Constraints:}\\
+    We need to ensure that enough people work on each of the days.\\
+    \textbf{Question:} Given a solution, how many people work on Monday?\\
+    \textbf{Answer:} All but those that start on Tuesday, i.e.
+    $$x_M + x_W + x_{Th} + x_F$$
+    And it must be greater than or equal to the number of workers required\\
+    So the complete LP is:\\
+    \bigskip
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $x_M + x_T + x_W + x_{Th} + x_F$\\
+            s.t. & $x_M + x_W + x_{Th} + x_F \geq 3$\\
+            & $x_M + x_T + x_{Th} + x_F \geq 5$\\
+            & $x_M + x_T + x_W + x_F \geq 9$\\
+            & $x_M + x_T + x_W + x_{Th} \geq 2$\\
+            &  $x_T + x_W + x_{Th} + x_F \geq 7$\\
+            & $x \geq 0, x$ integer\\
+        \end{tabular}
+    \end{center}
+    
+    \pagebreak
+    
+
+
+
+
 
 \end{document}
