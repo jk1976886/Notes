@@ -899,9 +899,217 @@
 
     \pagebreak
     
+    \section{Linear Programs: Possible Outcomes}
+    What does solving an optimization problem mean?\\
+    \boxed{\text{LP/IP/NLP}} $\rightarrow$ \boxed{\text{algorithm (software)}} $\rightarrow$ \boxed{\text{solution}}\\
+    \bigskip
+
+    For example:\\
+    \begin{tabular}{rl}
+        max & $2x_1 - 3x_2$\\
+        s.t. & $x_1 + x_2 \leq 1$\\
+        & $x_1, x_2 \geq 0$\\
+    \end{tabular}\\
+    \bigskip
+    Trivially, the solution for this problem is:\\
+    \begin{tabular}{l}
+        $x_1 = 1$\\
+        $x_2 = 0$\\
+    \end{tabular}
+    But sometimes, the answer is not so straightforward!\\
+
+    \subsection{3 types of outcomes}
+
+    \red{\textbf{Feasibility}}\\
+    \begin{itemize}
+        \item a assignment of values to each of the variables is a \red{feasible solution} if all the constraints are satisfied
+        \item an optimization problem is \red{feasible} if it has at least one feasible solution
+        \item It is \red{infeasible} otherwise
+    \end{itemize}
+    Note: a feasible optimization problem can have infeasible solutions!\\
+    \bigskip
+    \red{\textbf{Optimal}}\\
+    \begin{itemize}
+        \item For a maximization problem, an \red{optimal solution} is a feasible solution that max the objective function.
+        \item For a minimization problem, an \red{optimal solution} is a feasible solution that min the objective function.
+    \end{itemize}
+
+    Notes:\\
+    \begin{itemize}
+        \item an optimization problem can have several optimal solutions!
+        \item an infeasible problem can NOT have optimal solutions
+        \item not every feasible problem have an optimal solution
+    \end{itemize}
+
+    Examples:\\
+    \begin{tabular}{|rl|l}
+        \cline{1-2}
+        max & $x_1$ & \multirow{3}{*}{Infeasible problem, so no optimal solution}\\
+        s.t & $x1 \geq 2$\\
+        & $x_1 \leq 1$\\
+        \cline{1-2}
+    \end{tabular}
+    \bigskip\\
+    \begin{tabular}{|rl|l}
+        \cline{1-2}
+        max & $x_1$ & Feasible $x_1 = 1$, but still no optimal solution\\
+        s.t & $x1 \geq 1$ & Also called unbounded problem\\
+        \cline{1-2}
+    \end{tabular}
+    \pagebreak
+
+    \red{\textbf{Unboundedness:}}\\
+    \begin{itemize}
+        \item A maximization problem is \red{unbounded} if for every value $M$, there exists
+         a feasible solution with objective value greater than $M$
+        \item A minimization problem is \red{unbounded} if for every value $M$, there exists 
+         a feasible solution with objective value smaller than $M$
+    \end{itemize}
+
+    Note:\\
+    There exist problems that are NOT infeasible, NO optimal solution, and NOT unbounded\\
+    \bigskip
+    For example:\\
+    \begin{tabular}{rl}
+        max & $x$\\
+        s.t. & $x < 1$\\
+    \end{tabular}
+    \begin{itemize}
+        \item It is feasible as $x = 0$ is a feasible solution
+        \item It is not unbounded since $1$ is an upper bound
+        \item It does not have an optimal solution \textbf{(requires proof!)}
+    \end{itemize}
+
+    Proof:\\
+    Suppose for a contradiction $x$ is an optimal solution. Let:
+    $$ x':= \frac{x+1}{2}$$
+    Then $x' < 1$ is feasible. Moreover, $x' > x$, meaning $x$ is not optimal.\\
+    Contradiction! Thus, $x$ is not optimal.\\
+
+    \bigskip
+    Another example:\\
+    \begin{tabular}{rl}
+        min & $\frac{1}{x}$\\
+        s.t. & $x \geq 1$\\
+    \end{tabular}
+
+    \begin{itemize}
+        \item It is feasible as $x = 1$ is a feasible solution
+        \item It is not unbounded since $0$ is a lower bound
+        \item It does not have an optimal solution \textbf{(Proof below)}
+    \end{itemize}
+
+    Proof:\\
+    Suppose for a contradiction $x$ is an optimal solution. Let:
+    $$ x':= x + 1$$
+    Then $x' > x \geq 1$ is feasible. Moreover, $\frac{1}{x'} < \frac{1}{x}$ since $x' \geq x$, meaning $x$ is not optimal.\\
+    Contradiction! Thus, $x$ is not optimal.\\
+
+    \pagebreak
+    \subsection{Fundamental Theorem of Linear Programming}
+    For any linear program, \red{exactly one} of the following holds:
+    \begin{itemize}
+        \item it has an optimal solution
+        \item it is infeasible
+        \item it is unbounded
+    \end{itemize}
+    Prove later in the course.
+
+    \subsection{Solving a LP}
+    What is an algorithm that solves LP?
+    \begin{itemize}
+        \item if the LP has an optimal solution
+        \begin{itemize}
+            \item return an optimal solution $\bar{x}$ + \red{proof} that $\bar{x}$ is optimal
+        \end{itemize}
+        \item if the LP is infeasible
+        \begin{itemize}
+            \item return a \red{proof} the LP is infeasible
+        \end{itemize}
+        \item if the LP is unbounded
+        \begin{itemize}
+            \item return a \red{proof} the LP is unbounded
+        \end{itemize}
+    \end{itemize}
     
+    \pagebreak
+    \section{Certificates}
+    \subsection{Proving Infeasibility}
+    \begin{tabular}{rl}
+        max & $(3,4,-1,2)^Tx$\\
+        s.t. & $\begin{pmatrix}
+            3 & -2 & -6 & 7\\
+            2 & -1 & -2 & 4\\
+        \end{pmatrix} x = \begin{pmatrix}
+            6\\
+            2\\
+        \end{pmatrix}$\\
+        & $x \geq 0$\\
+    \end{tabular}
 
+    We \red{cannot} try all possible assignments of values to $x_1, x_2, x_3,$ and $x_4$\\
+    \bigskip
+    \red{\textbf{Claim:}}\\
+    There is no solution to (1), (2) and $x \geq 0$ where:
+    \begin{center}
+        \begin{tabular}{ll}
+            \multirow{2}{*}{$\begin{pmatrix}
+                3 & -2 & -6 & 7\\
+                2 & -1 & -2 & 4\\
+            \end{pmatrix} x = \begin{pmatrix}
+                6\\
+                2\\
+            \end{pmatrix}$} & (1)\\
+            & (2)\\
+        \end{tabular}
+    \end{center}
 
+    \bigskip
+    \red{\textbf{Proof:}}\\
+    Construct a new equation with $-1 \times (1) + 2 \times (2)$\\
+    \begin{equation*}
+        (1 \; 0 \; 2 \; 1)x = -2 \hspace{2cm} \text{(*)}
+    \end{equation*}
 
+    Suppose for a contradiction there exists $\bar{x} \geq 0$ satisfying (1) and (2). Then $\bar{x}$ satisfies (*):
+    $$\underbrace{(1 \; 0 \; 2 \; 1)\bar{x}}_{\geq 0} = \underbrace{-2}_{<0}$$
+    But it doesn't, so we have a contradiction.
+    Therefore the program is infeasible.
+
+    \bigskip
+    \red{\textbf{Same proof but using matrix:}}\\
+    Suppose there exists a contracdition $\bar{x} \geq 0$ and\\
+    \begin{tabular}{l}
+        $\begin{pmatrix}
+            3 & -2 & -6 & 7\\
+            2 & -1 & -2 & 4\\
+        \end{pmatrix} x = \begin{pmatrix}
+            6\\
+            2\\
+        \end{pmatrix}$
+    \end{tabular}
+    
+    Construct a new equation:\\
+    
+    \begin{tabular}{rl}
+        \begin{tabular}{rl}
+            $\begin{pmatrix}
+                -1 & 2\\
+            \end{pmatrix}$ & $\begin{pmatrix}
+                3 & -2 & -6 & 7\\
+                2 & -1 & -2 & 4\\
+            \end{pmatrix} x = \begin{pmatrix}
+                -1 & 2\\
+            \end{pmatrix}\begin{pmatrix}
+                6\\
+                2\\
+            \end{pmatrix}$
+        \end{tabular}
+    \end{tabular}
+    \bigskip
+    $(1 \; 0 \; 2 \; 1)x = -2 \hspace{2cm} \text{(*)}$\\
+    Since $\bar{x}$ satisfies the equations, it satisfies (*):\\
+    $$\underbrace{(1 \; 0 \; 2 \; 1)\bar{x}}_{\geq 0^T}\underbrace{-1}_{\geq 0} = \underbrace{-2}_{<0}$$
+    Contradiction! So the original  must be infeasible
 
 \end{document}
