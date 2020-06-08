@@ -27,6 +27,9 @@
 \newcommand{\purple}[1]{{\color{purple}{#1}}}
 \newcommand{\white}[1]{{\color{white}{#1}}}
 
+%override default second layer itemize to circle
+\renewcommand{\labelitemii}{$\circ$}
+
 \begin{document}
 
     
@@ -777,16 +780,128 @@
     \section{Nonlinear Programs (NLP)}
     A nonlinear program (NLP) is of the form:\\
     \begin{center}
-        \begin{tabular}{rl}
-            min & $f(x)$\\
-            s.t. & $g_1(x) \leq 0$\\
-            & $g_2(x) \leq 0$\\
-            & $\dots$\\
-            & $g_m(x) \leq 0$\\
+            \begin{tabular}{rl}
+                min & $f(x)$\\
+                s.t. & $g_1(x) \leq 0$\\
+                & $g_2(x) \leq 0$\\
+                & $\dots$\\
+                & $g_m(x) \leq 0$\\
+            \end{tabular}
+    \end{center}
+
+    Where:\\
+    \begin{itemize}
+        \item $x \in \mathbb{R}$
+        \item $f : \mathbb{R}^n \rightarrow \mathbb{R}$
+        \item $g_i : \mathbb{R}^n \rightarrow \mathbb{R}$
+    \end{itemize}
+    
+    \red{Note:} Linear programs (LPs) are NLPs!\\
+
+    \subsection{NLP Models: Finding Close Points in an LP}
+    \red{\textbf{Problem:}}\\
+    We are given an LP (P), and an infeasible point $\bar{x}$\\
+    \red{\textbf{Goal:}}\\
+    Find a point $x \in P$ that is as close as possible to $\bar{x}$\\
+    \bigskip
+    i.e. find a point $x \in P$ that minimizes the \red{Euclidean distance} to $\bar{x}$\\
+    $$||x - \bar{x}||_2 = \sqrt{\sum^n_{i=1}(x_i - \bar{x}_i)^2}$$
+    Remark: $||p||_2$ is called the $L^2$-norm of p
+
+    \bigskip
+    \red{\textbf{Generic model:}}\\
+    \begin{center}
+        \begin{tabular}{c|c}
+            \begin{tabular}[t]{rl}
+                \multicolumn{2}{l}{Given LP:}\\
+                min & $c^Tx$\\
+                s.t. & $x \in P$
+            \end{tabular} & \begin{tabular}[t]{rl}
+                \multicolumn{2}{l}{Solve:}\\
+                min & $||x - \bar{x}||_2$\\
+                s.t. & $x \in P$ where $P = \{x: Ax \leq b\}$\\
+            \end{tabular}
         \end{tabular}
     \end{center}
 
+    \subsection{NLP Models: Binary IPs}
+    Suppose we are given a binary IP (i.e. an IP with all variables are binary)\\
+    Recall that Binary IPs are generally hard to solve!\\
+    We need to rewrite binary IPs as NLPs\\
+    \bigbreak
+    \red{\textbf{Generic model:}}\\
+    \begin{center}
+        \begin{tabular}{c|c}
+            \begin{tabular}[t]{rl}
+                \multicolumn{2}{l}{Given IP:}\\
+                max & $c^Tx$\\
+                s.t. & $Ax \leq b$\\
+                & $x \geq 0$\\
+                & $x_j \in \{0,1\} \hspace{1cm} (j \in \{1,/dots,n\})$\\
+            \end{tabular} & \begin{tabular}[t]{rl}
+                \multicolumn{2}{l}{Rewrite:}\\
+                max & $c^Tx$\\
+                s.t. & $Ax \leq b$\\
+                & $x \geq 0$\\
+                & $x_j(1-x_j) = 0 \hspace{1cm} (j \in [n]) \hspace{1cm} (*)$\\
+            \end{tabular}
+        \end{tabular}
+    \end{center}
+    \bigskip
+    Correctness:\\
+    For $j \in [n]$, $(*)$ holds iff $x_j = 0$ or $x_j = 1$\\
+    \bigskip
+    Question:\\
+    Can you change the NLP to express teh fact that $x_j$ is \red{any non-negative integer} instead of binary?\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $c^Tx$\\
+            s.t. & $Ax \leq b$\\
+            & $x \geq 0$\\
+            & $sin(\pi x_j) = 0 \hspace{1cm} (j \in [n]) \hspace{1cm} (**)$\\
+        \end{tabular}
+    \end{center}
+    \bigskip
+    Correctness:\\
+    Note that $sin(\pi x_j) = 0$ only if $x_j$ is an integer. 
+    Combining with non negative constraint it limits $x_j$ to be any non-negative integer.\\
+
+    \subsection{Fermat's last Theorem}
+    Conjecture:\\
+    There are \red{no integers $x,y,z \geq 1$ and $n \geq 3$} such that\\
+    $$x^n + y^n = z^n$$
+    The proof is 150 pages long!\\
+    \bigskip
+    \textbf{NLP for Fermat's Last Theorem}\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $({x_1}^{x_4} + {x_2}^{x_4} - {x_3}^{x_4}) ^2 + (sin \; \pi x_1)^2 + (sin \; \pi x_2)^2 + (sin \; \pi x_3)^2 + (sin \; \pi x_4)^2$\\
+            s.t. & $x_i \geq 1 \hspace{1cm} (i = 1\dots3)$\\
+            & $x_4 \geq 3$\\
+        \end{tabular}
+    \end{center}
+    \pagebreak
+    \begin{itemize}
+        \item This NLP is trivially feasible, and the value of any feasible solution is non-negative as its objective is the \red{sum of squares}, which means the min possible value is 0
+        \item In fact, the value of a solution $(x_1, x_2, x_3, x_4)$ is 0 iff
+        \begin{itemize}
+            \item ${x_1}^{x_4} + {x_2}^{x_4} = {x_3}^{x_4}$, and
+            \item $(sin \; \pi x_i)^2 = 0$, for all $(i = 1 \dots 3)$
+        \end{itemize}
+    \end{itemize}
+
+    \red{\textbf{Notes:}}\\
+    \begin{itemize}
+        \item Fermat's Last Theorem is true iff the NLP has optimal value \red{greater than} 0
+        \item It is well known that there is an infinite sequence of feasible solutions whose objective value converges to 0!
+        \item To prove Fermat's Last Theorem we must show that the value 0 \red{can not be attained!}
+    \end{itemize}
+
+    \pagebreak
     
+    
+
+
 
 
 \end{document}
