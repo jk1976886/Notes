@@ -579,6 +579,7 @@
     \textbf{More notations:}\\
     Use $\delta(v)$ to denote the set of edges incident to $v$, i.e.:
     $$ \delta(v) = \{e \in E : e = vu \text{ for some } u \in V\}$$
+    \red{This definition is improved later!}\\
     For example:\\
     \begin{itemize}
         \item $\delta(2) = \{21', 24'\}$
@@ -661,10 +662,10 @@
         \begin{tikzpicture}[shorten >=1pt,->]
             \tikzstyle{vertex}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
           
-            \node[vertex] (G-s) at (0, 2) {s};
-            \node[vertex] (G-a) at (2, 4) {a};
+            \node[vertex] (G-s) at (0, 1) {s};
+            \node[vertex] (G-a) at (2, 2) {a};
             \node[vertex] (G-b) at (2, 0) {b};
-            \node[vertex] (G-t) at (4, 2) {t};
+            \node[vertex] (G-t) at (4, 1) {t};
           
             \draw (G-s) -- (G-a) node[pos=0.5, above] {3};
             \draw (G-s) -- (G-b) node[pos=0.5, above] {4};
@@ -676,22 +677,116 @@
 
     Let $C = \{sb, ab, at\}$, notice that removing all edges in $C$ eliminates all paths from $s$ to $t$\\
     Therefore, \red{every $s,t$-path must have at least one edge in $C$}\\
+    \bigskip
+    A more precise definition of notation $\delta$:\\
+    For $S \in V$, we let $\delta(S)$ be the set of edges with \red{exactly one endpoint in $S$}\\
+    $$\delta(S) = \{uv \in E : u \in S, v \notin S\}$$
 
+    Examples:\\
+    \begin{enumerate}
+        \item $S =\{s\} \rightarrow \{sa, ab\}$
+        \item $S =\{s, a\} \rightarrow \{ab, at, sb\}$
+        \item $S =\{a, b\} \rightarrow \{sa, sb, at, bt\}$
+    \end{enumerate}
 
+    Definition of \red{$s,t$-cut}:\\
+    \begin{itemize}
+        \item $\delta(S)$ is an $s,t$-cut if $s \in S$ and $t \notin S$
+    \end{itemize}
+    
+    Using the 3 $\delta(S)$ examples above, 1 and 2 are $s,t$-cuts, 3 is not\\
 
+    \bigskip
+    \textbf{Remark:}
+    \begin{enumerate}
+        \item if $P$ is an $s,t$-path and $\delta(S)$ is an $s,t$-cut, then P \red{must have an edge} from $\delta(S)$
+        \item if $S \subseteq E$ contains \red{at least one} edge from \red{every $s,t$-cut}, then $S$ contains an $s,t$-path
+    \end{enumerate}
+    \pagebreak
+    Prove \#2 by contradiction:\\
+    \begin{itemize}
+        \item suppose $S$ has an edge from every $s,t$-cut, but $S$ has no $s,t$-path
+        \item Let $R$ be the set of vertices \red{reachable} from $s$ in $S$: $R = \{u \in V : S \text{ has an }s,u \text{ path}\}$
+        \item $\delta(R)$ is an $s,t$-cut since $s \in R$ and $t \notin R$
+        \item Note: there cannot be an edge $uv \in S$ with $u \in R$ and $v \notin R$. Otherwise $v$ should have been in $R$!
+        \item So $\delta(R) \cap S = \emptyset$
+        \item Contradiction!
+    \end{itemize}
 
+    \textbf{Generic IP for Shortest Path problem:}\\
+    \red{\textbf{Variables:}}\\ 
+    We have one binary variable $x_e$ for each edge $e \in E$. We want:\\
+    $$x_e = \left\{ \begin{array}{ll}
+        1 & : e \in P\\
+        0 & : \text{otherwise}\\
+        \end{array}
+    \right.$$
+    \red{\textbf{Constraints:}}\\
+    We have one constraint for each $s,t$-cut $\delta(U)$, forcing $P$ to have an edge from $\delta(S)$\\
+    \begin{equation}
+        \sum x_e : e \in \delta(U)) \geq 1 \hspace{1cm}\text{for all $s,t$-cuts $\delta(U)$}
+    \end{equation}
 
+    \red{\textbf{Objective Function:}}\\
+    $$\sum(c_ex_e : e \in E)$$
 
+    \red{\textbf{Complete Model:}}\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $\sum(c_ex_e : e \in E)$\\
+            s.t. & $\sum(x_e : e \in \delta(U)) \geq 1 (U \subseteq V, s \in U, t \notin U)$\\
+            & $x_e \geq 0$, $x_e$ integer\\
+        \end{tabular}
+    \end{center}
 
+    Suppose $c_e > 0$ for all $e \in E$, then in an optimal solution, $x_e \leq 1$ for all $e \in E$\\
+    \begin{itemize}
+        \item Suppose $x_e \geq 1$
+        \item Then let $x_e = 1$. This is cheaper and maintains feasibility!
+    \end{itemize}
 
+    For binary solution $x$, define\\
+    $$S_x = \{e \in E : x_e = 1\}$$
+    Note: If $x$ is a feasible for an IP, then $S_x$ has at least one edge from every $s,t$-cut and $S_x$ has a $s,t$-path, \red{but} $S_x$ may contain more than just an $s,t$-path!
+    \pagebreak
+    Consider this diagram again:
+    \begin{center}
+        \begin{tikzpicture}[shorten >=1pt,->]
+            \tikzstyle{vertex}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+          
+            \node[vertex] (G-s) at (0, 1) {s};
+            \node[vertex] (G-a) at (2, 2) {a};
+            \node[vertex] (G-b) at (2, 0) {b};
+            \node[vertex] (G-t) at (4, 1) {t};
+          
+            \draw (G-s) -- (G-a) node[pos=0.5, above] {3};
+            \draw (G-s) -- (G-b) node[pos=0.5, above] {4};
+            \draw (G-a) -- (G-t) node[pos=0.5, above] {2};
+            \draw (G-b) -- (G-t) node[pos=0.5, above] {2};
+            \draw (G-a) -- (G-b) node[pos=0.5, right] {1};
+        \end{tikzpicture}
+    \end{center}
+    Let $x_e = 1$ for $e \in \{sa, ab, at\}$, and $x_e = 0$ otherwise.\\
+    So $S_x = \{sa, ab, at\}$\\
+    $x$ cannot be optimal for the IP because we can reduce $S_x$ and get a better solution!\\
+    i.e. let $x_ab = 0$ and the solution is more efficient\\
+    \bigskip
+    So if $x$ is an optimal solution for the IP \red{and $c_e \geq 0$ for all $e \in E$} then $S_x$ contains the edges of a shortest $s,t$-path
 
-
-
-
-
+    \pagebreak
+    \section{Nonlinear Programs (NLP)}
+    A nonlinear program (NLP) is of the form:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $f(x)$\\
+            s.t. & $g_1(x) \leq 0$\\
+            & $g_2(x) \leq 0$\\
+            & $\dots$\\
+            & $g_m(x) \leq 0$\\
+        \end{tabular}
+    \end{center}
 
     
-
 
 
 \end{document}
