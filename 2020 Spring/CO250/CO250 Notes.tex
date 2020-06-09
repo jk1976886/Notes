@@ -1035,17 +1035,20 @@
     \pagebreak
     \section{Certificates}
     \subsection{Proving Infeasibility}
-    \begin{tabular}{rl}
-        max & $(3,4,-1,2)^Tx$\\
-        s.t. & $\begin{pmatrix}
-            3 & -2 & -6 & 7\\
-            2 & -1 & -2 & 4\\
-        \end{pmatrix} x = \begin{pmatrix}
-            6\\
-            2\\
-        \end{pmatrix}$\\
-        & $x \geq 0$\\
-    \end{tabular}
+    Consider the following problem:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $(3,4,-1,2)^Tx$\\
+            s.t. & $\begin{pmatrix}
+                3 & -2 & -6 & 7\\
+                2 & -1 & -2 & 4\\
+            \end{pmatrix} x = \begin{pmatrix}
+                6\\
+                2\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular} 
+    \end{center}
 
     We \red{cannot} try all possible assignments of values to $x_1, x_2, x_3,$ and $x_4$\\
     \bigskip
@@ -1090,26 +1093,416 @@
     \end{tabular}
     
     Construct a new equation:\\
-    
-    \begin{tabular}{rl}
+    \begin{center}
         \begin{tabular}{rl}
-            $\begin{pmatrix}
-                -1 & 2\\
-            \end{pmatrix}$ & $\begin{pmatrix}
-                3 & -2 & -6 & 7\\
-                2 & -1 & -2 & 4\\
-            \end{pmatrix} x = \begin{pmatrix}
-                -1 & 2\\
-            \end{pmatrix}\begin{pmatrix}
-                6\\
-                2\\
-            \end{pmatrix}$
+            \begin{tabular}{rl}
+                $\begin{pmatrix}
+                    -1 & 2\\
+                \end{pmatrix}$ & $\begin{pmatrix}
+                    3 & -2 & -6 & 7\\
+                    2 & -1 & -2 & 4\\
+                \end{pmatrix} x = \begin{pmatrix}
+                    -1 & 2\\
+                \end{pmatrix}\begin{pmatrix}
+                    6\\
+                    2\\
+                \end{pmatrix}$
+            \end{tabular}
         \end{tabular}
-    \end{tabular}
-    \bigskip
-    $(1 \; 0 \; 2 \; 1)x = -2 \hspace{2cm} \text{(*)}$\\
+    \end{center}
+
+    $$(1 \; 0 \; 2 \; 1)x = -2 \hspace{2cm} \text{(*)}$$
     Since $\bar{x}$ satisfies the equations, it satisfies (*):\\
-    $$\underbrace{(1 \; 0 \; 2 \; 1)\bar{x}}_{\geq 0^T}\underbrace{-1}_{\geq 0} = \underbrace{-2}_{<0}$$
-    Contradiction! So the original  must be infeasible
+    $$\underbrace{(1 \; 0 \; 2 \; 1)}_{\geq 0^T}\underbrace{\bar{x}}_{\geq 0} = \underbrace{-2}_{<0}$$
+    Contradiction! So the original  must be infeasible.\\
+    
+    \pagebreak
+    \red{\textbf{Proposition}}:\\
+    There is no solution to $Ax = b, x \geq 0$ if there exists $y$ where:\\
+    $$ y^TA \geq 0^T \text{ and } y^Tb < 0 $$
+    \red{\textbf{Proof:}}\\
+    Suppose for a contradiction there is a solution $\bar{x} \geq 0$\\
+    Then $\bar{x}$ satisfies the equation $Ax = b$ and should also satisfy:\\
+    $$\underbrace{y^TA}_{\geq 0^T}\underbrace{\bar{x}}_{\geq 0} = \underbrace{y^Tb}_{<0}$$
+    But based on the positivity and negativity of the terms, $\bar{x}$ does not satisfy the equation above.\\
+    So, by contradiction, $Ax = b, x \geq 0$ has no solution. \qed\\
+    \bigskip
+    \red{\textbf{Farkas' Lemma}}:\\
+    If there is no solution to $Ax =  b, x\geq 0$, then there exist $y$ where\\
+    $$y^TA \geq 0^T \text{ and } y^Tb < 0 $$
+    In other words, the ONLY reason why there is no solution, is because such $y^T$ exist!\\
+    \bigskip
+    \subsection{Proving Optimality}
+    Consider the following problem:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $z(x) := (-1 \; -4 \; 0 \; 0)x + 4$\\
+            s.t. & $\begin{pmatrix}
+                1 & 3 & 1 & 0\\
+                -2 & 6 & 0 & 1\\
+            \end{pmatrix} x = \begin{pmatrix}
+                4\\
+                5\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+
+    The optimal solution is:\\
+    \begin{align*}
+        \bar{x}_1 &= 0\\
+        \bar{x}_2 &= 0\\
+        \bar{x}_3 &= 4\\
+        \bar{x}_4 &= 5\\
+    \end{align*}
+
+    How can we show that it is an optimal solution?\\
+    If we show:\\
+    \begin{itemize}
+        \item $\bar{x}$ is a feasible solution that gives the value 4 for the objective function
+        \item 4 is an \red{upper bound}
+    \end{itemize}
+    Then we can conclude that $\bar{x}$ is an optimal solution\\
+    Note: this does not show that $\bar{x}$ is the ONLY optimal solution!\\
+    \pagebreak
+
+    \red{\textbf{Proof:}}\\
+    Let $x'$ be an arbitrary feasible solution. Then\\
+    $$z(x') = \underbrace{(-1 \; -4 \; 0 \; 0)x'}_{\leq 0 \text{ since matrix non-positive}} + 4 \leq 4$$
+    So 4 is an upper bound, and thus $x'$ is an optimal solution.\qed
+
+    \subsection{Proving Unboundedness}
+    Consider the following problem:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $z(x) := (-1 \; 0 \; 0 \; 1)x$\\
+            s.t. & $\begin{pmatrix}
+                -1 & -1 & 1 & 0\\
+                -2 & 1 & 0 & 1\\
+            \end{pmatrix} x = \begin{pmatrix}
+                2\\
+                1\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+
+    How can we prove that this problem is unbounded?\\
+    \begin{itemize}
+        \item construct a family of feasible solutions $x{t}$ for all $t \geq 0$ and show that
+        as $t$ goes to infinity, the value of the objective function goes to infinity.
+        \item this means that we can have feasible solution of arbitrary high value, aka we have an unbounded program 
+    \end{itemize}
+    \bigskip
+    Consider the family:
+    $$x(t) := \begin{pmatrix}
+        0\\
+        0\\
+        2\\
+        1\\
+    \end{pmatrix} + t\begin{pmatrix}
+        1\\
+        0\\
+        1\\
+        2\\
+    \end{pmatrix}$$
+
+    \red{\textbf{Claim 1:}}\\
+    $x(t)$ is feasible for all $t \geq 0$\\
+    \red{\textbf{Proof:}}\\
+    Let $A = \begin{pmatrix}
+        -1 & -1 & 1 & 0\\
+        -2 & 1 & 0 & 1\\
+    \end{pmatrix}$, $b = \begin{pmatrix}
+        2\\
+        1\\
+    \end{pmatrix}$, $\bar{x} = \begin{pmatrix}
+        0\\
+        0\\
+        2\\
+        1\\
+    \end{pmatrix}$, and $r = \begin{pmatrix}
+        1\\
+        0\\
+        1\\
+        2\\
+    \end{pmatrix}$\\
+
+    So we are trying to show:\\
+    $$x(t) = \bar{x} + tr \geq 0 \text{ for all } t \geq 0 \text{ as } \bar{x},r \geq 0$$
+    $$Ax(t) = A[\bar{x} + tr] = \underbrace{A\bar{x}}_b + \underbrace{tAr}_0 = b$$
+    So $x(t)$ is feasible for all $t \geq 0$, as desired. \qed
+
+    \pagebreak
+    \red{\textbf{Claim 2:}}\\
+    As $t \rightarrow \infty$, $z \rightarrow \infty$\\
+    \red{\textbf{Proof:}}\\
+    Let $c = (-1 \; 0 \; 0 \; 1)$
+    $$z = c^Tx(t) = c^T[\bar{x} + tr] = c^T\bar{x} + t\underbrace{c^Tr}_{=1>0} = c^T\bar{x} + t$$
+    So, as $t \rightarrow \infty$, $z \rightarrow \infty$, as desired. \qed
+
+    \bigskip
+
+    \red{\textbf{Generalization:}}\\
+    It is provable in a similar way that the linear program:\\
+    $$max\{c^Tx : Ax = b, x\geq 0\}$$
+    is unbounded if we can find $\bar{x}$ and $r$ such that\\
+    $$\bar{x} \geq 0, r \geq 0, A\bar{x} = b, Ar = 0, \text{ and } c^Tr > 0$$ 
+
+    \pagebreak
+    \section{Standard Equality Forms}
+    A LP is in \red{Standard Equality Form (SEF)} if
+    \begin{itemize}
+        \item it is a \red{maximization} problem, and
+        \item for every variable $x_j$ we have the constraint $x_j \geq 0$, and
+        \item all other constraints are equality constraints
+    \end{itemize}
+
+    For example:
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $x_1 + x_2 + 17$\\
+            s.t. & $x_1 - x_2 = 0$\\
+            & $x_1 \geq 0$\\
+        \end{tabular}
+    \end{center}
+
+    is an LP that is not in SEF because there is no constraint $x_2 \geq 0$\\
+    We say $x_2$ is \red{free}\\
+    \bigskip
+    Note:\\
+    \begin{itemize}
+        \item $x_2 \geq 0$ is implied by the problem
+        \item $x_2$ is still free since $x_2 \geq 0$ is not given \red{explicitly}
+    \end{itemize}
+
+    \red{\textbf{Motivation:}}\\
+    We will develop an algorithm called the Simplex that can solve any LP \red{if it is in SEF}\\
+    For any LP that is not in SEF, we can:\\
+    \begin{itemize}
+        \item Find an \red{"equivalent"} LP in SEF
+        \item Solve the \red{"equivalent"} LP using Simplex
+        \item use the solution of \red{"equivalent"} LP to get the solution of the original LP
+    \end{itemize}
+    \bigskip
+    \red{"Equivalent LPs"}\\
+    \begin{itemize}
+        \item Linear programs (P) and (Q) are equivalent if:
+        \begin{itemize}
+            \item (P) infeasible $\longleftrightarrow$ (Q) infeasible
+            \item (P) unbounded $\longleftrightarrow$ (Q) unbounded
+            \item can construct optimal solution of (P) from optimal solution of (Q)
+            \item can construct optimal solution of (Q) from optimal solution of (P)
+        \end{itemize}
+    \end{itemize}
+
+    \pagebreak
+    \red{\textbf{Theorem:}}\\
+    Every LP has an equivalent LP in SEF\\
+    Examples/special cases:\\
+    \begin{itemize}
+        \item dealing with minimization
+        \begin{itemize}
+            \item $min f(x)$ is the same as $max -f(x)$
+        \end{itemize}
+        \item replacing inequalities by equalities
+        \begin{itemize}
+            \item The following two constraints are the same:
+            \begin{itemize}
+                \item $\alpha \leq \beta$
+                \item $\alpha + s = \beta$, where $s \geq 0$
+            \end{itemize}
+            \item using similar technique, we can convert any inequality to an equality constraint
+        \end{itemize}
+        \item free variables
+        \begin{itemize}
+            \item any number is the difference between two non-negative numbers
+            \item so we can set a free variable $x = a - b$ where $a,b \geq 0$
+            \item and then rewrite the objective function and constraints by substitution and simplification 
+        \end{itemize}
+    \end{itemize}
+
+    \bigskip
+    So, to solve any LP, it suffices to know how to solve LPs in SEF.
+
+    \pagebreak
+    \section{Simplex}
+    A naive strategy for solving an LP:
+    \begin{itemize}
+        \item find a feasible solution $x$
+        \item if $x$ is optimal, stop
+        \item if LP is unbounded, stop
+        \item find a "better" feasible solution (repeat)
+    \end{itemize}
+    but some problems arise:
+    \begin{itemize}
+        \item how do we find a feasible solution?
+        \item how do we find a "better" solution?
+        \item will this algorithm ever terminate?
+    \end{itemize}
+    \bigskip
+    Example 1:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & (4,3,0,0)x + 7\\
+            s.t & $\begin{pmatrix}
+                3 & 2 & 1 & 0\\
+                1 & 1 & 0 & 1\\
+            \end{pmatrix} x = \begin{pmatrix}
+                2\\
+                1\\
+            \end{pmatrix}$\\
+            & $x_1,x_2,x_3,x_4 \geq 0$\\
+        \end{tabular}
+    \end{center}
+    It is obvious that we have a feasible solution:\\
+    \begin{align*}
+        x_1 = 0\\
+        x_2 = 0\\
+        x_3 = 2\\
+        x_4 = 1\\
+    \end{align*}
+    The objective function is $z = 4x_1 + 3x_2 + 7$, the feasible solution has objective value 7\\
+    Can we find a feasible solution with value larger than 7? Yes\\
+    \bigskip
+    The idea is to make as little change to the current feasible solution as possible\\
+    So we change only 1 variable at a time\\
+    We can either increase $x_1$ or $x_2$ to affect the objective value\\
+    Let's arbitrarily decide to increase $x_1$ and leave $x_2$ unchanged, i.e.\\
+    \begin{itemize}
+        \item Increase $x_1$ as much as possible, and keep $x_2$ unchanged
+        \begin{itemize}
+            \item $x_1 = t$ for some $t \geq 0$ as large as possible
+            \item $x_1 = 0$
+        \end{itemize}
+    \end{itemize}
+    \pagebreak
+    Since we have\\
+    \begin{align*}
+        x_1 &= t\\
+        x_2 &= 0\\
+        x_3 &= \; ?\\
+        x_4 &= \; ?\\
+    \end{align*}
+    The objective function becomes\\
+    $$z = 4t + 7$$
+    So to have $z$ as large as possible, we need to choose $t$ as large as possible\\
+    Note:
+    \begin{itemize}
+        \item we need to satisfy all equality constraints, and
+        \item the non-negativity constraints
+    \end{itemize}
+
+    Since we have 2 equations and 2 variables of freedom, we can attempt to get a formula that obtains the required
+    value of $x_3$ and $x_4$\\
+    \begin{align*}
+        \begin{pmatrix}
+            2\\
+            1\\
+        \end{pmatrix} &= \begin{pmatrix}
+            3 & 2 & 1 & 0\\
+            1 & 1 & 0 & 1\\
+        \end{pmatrix}x\\
+        &= x_1\begin{pmatrix}
+            3\\
+            1\\
+        \end{pmatrix} + x_2\begin{pmatrix}
+            2\\
+            1\\
+        \end{pmatrix} + x_3\begin{pmatrix}
+            1\\
+            0\\
+        \end{pmatrix} + x_4\begin{pmatrix}
+            0\\
+            1\\
+        \end{pmatrix}\\
+        &= t\begin{pmatrix}
+            3\\
+            1\\
+        \end{pmatrix} + 0\begin{pmatrix}
+            2\\
+            1\\
+        \end{pmatrix} + \begin{pmatrix}
+            x_3\\
+            0\\
+        \end{pmatrix} + \begin{pmatrix}
+            0\\
+            x_4\\
+        \end{pmatrix}\\
+        &= t\begin{pmatrix}
+            3\\
+            1\\
+        \end{pmatrix} + \begin{pmatrix}
+            x_3\\
+            x_4\\
+        \end{pmatrix}\\
+        \text{So we have:}\\
+        \begin{pmatrix}
+            x_3\\
+            x_4\\
+        \end{pmatrix} &=\begin{pmatrix}
+            2\\
+            1\\
+        \end{pmatrix} - t\begin{pmatrix}
+            3\\
+            1\\
+        \end{pmatrix}\\
+    \end{align*}
+    Note that this constraint hold for any choice of $t$\\
+    \bigskip
+    Check non-negativity constraints:
+    \begin{itemize}
+        \item $x_1 = t \geq 0$\\
+        \item $x_2 = 0$\\
+        \item $x_3 = 2 - 3t \geq 0 \rightarrow t \leq \frac{2}{3}$
+        \item $x_3 = 1 - t \geq 0 \rightarrow t \leq 1$
+    \end{itemize}
+    \pagebreak
+    So the largest possible $t$ is $min\{\frac{2}{3}, 1\}$, and we have $t = \frac{2}{3}$\\
+    The new solution is:
+    $$x = (t, 0, 2 - 3t, 1 - t)^T = (\frac{2}{3}, 0, 0, \frac{1}{3})^T$$
+    \bigskip
+    The new solution is better, but still not optimal!
+    Can we use the same trick to get a better solution?
+    \begin{itemize}
+        \item performing the same trick on $x_2$ show that we can not increase it
+    \end{itemize}
+    So what made the trick to work the first time?\\
+    \bigskip
+    \red{\textbf{Canonical form}}\\
+    In our example:
+    \begin{center}
+        \begin{tabular}{rl}
+            max & (4,3,0,0)x + 7\\
+            s.t & $\begin{pmatrix}
+                3 & 2 & 1 & 0\\
+                1 & 1 & 0 & 1\\
+            \end{pmatrix} x = \begin{pmatrix}
+                2\\
+                1\\
+            \end{pmatrix}$\\
+            & $x_1,x_2,x_3,x_4 \geq 0$\\
+        \end{tabular}
+    \end{center}
+    \begin{itemize}
+        \item Column 3 and 4 in constraint matrix corresponds to an identity matrix
+        \item The corresponding entry has 0 values in the objective function
+        \item The right hand side matrix in the constraint is non-negative
+    \end{itemize}
+    \red{\textbf{Revised strategy:}}\\
+    \begin{itemize}
+        \item find a feasible solution, $x$
+        \item rewrite LP so that it is in "canonical" form
+        \item if $x$ is optimal, stop
+        \item if $x$ is unbounded, stop
+        \item find a better feasible solution (repeat)
+    \end{itemize}
+    So we still need to answer the following questions:\\
+    \begin{itemize}
+        \item define \red{"canonical"} form formally, which require us to define \red{basis} and \red{basic solutions}
+        \item prove that we can always rewrite LPs in canonical form
+    \end{itemize}
+
+    \pagebreak
 
 \end{document}
