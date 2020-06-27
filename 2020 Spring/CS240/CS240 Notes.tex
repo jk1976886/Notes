@@ -11,8 +11,11 @@
 \usepackage{graphicx}
 \usepackage[shortlabels]{enumitem}
 \usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usetikzlibrary{arrows,shapes}
 \usepackage[%
-	pdftitle={TITLE},%
+	pdftitle={CS240 Notes},%
 	hidelinks,%
 ]{hyperref}
 
@@ -25,6 +28,9 @@
 \newcommand{\yellow}[1]{{\color{yellow}{#1}}}
 \newcommand{\purple}[1]{{\color{purple}{#1}}}
 \newcommand{\white}[1]{{\color{white}{#1}}}
+
+%override default second layer itemize to circle
+\renewcommand{\labelitemii}{$\circ$}
 
 \begin{document}
 
@@ -45,6 +51,7 @@
     \setcounter{page}{1}
 
     \section{Course Objectives}
+    \subsection{Overview}
     What is this course about?
     \begin{itemize}
         \item When first learning to program, we emphasize \red{correctness}
@@ -56,9 +63,100 @@
         \item Algorithms are presented using pseudocode and analyzed using order notation (big-O, etc.)
     \end{itemize}
     \bigskip
-    \blue{blue}\\
-    
+    \textbf{\red{Course Topics}}:
+    \begin{itemize}
+        \item big-O analysis
+        \item priority queues and heaps
+        \item sorting, selection
+        \item binary search trees, AVL trees, B-trees
+        \item skip lists
+        \item hashing
+        \item quadtrees, kd-trees
+        \item range search
+        \item tries
+        \item string matching
+        \item data compression
+    \end{itemize}
+    \pagebreak
+    \textbf{Required knowledge:}
+    \begin{itemize}
+        \item arrays, linked lists (3.2- 3.4)
+        \item strings (3.6)
+        \item stacks, queues (4.2 - 4.6)
+        \item abstract data types (4 - intro, 4.1, 4.8 - 4.9)
+        \item recursie algorithms (5.1)
+        \item binary trees (5.4 - 5.7)
+        \item sorting (6.1 - 6.4)
+        \item binary search (12.4)
+        \item binary search trees (12.5)
+        \item probability and expectations
+    \end{itemize}
+    \pagebreak
+    \subsection{General Terminologies}
+    The core of CS240 is:\\
+    \begin{center}
+        Given problem $\Pi$, design algorithm $A$ that solves it, and analyze its \red{efficiency}
+    \end{center}
+    So what is a problem, an algorithms, and how do you quantify efficiency?\\
+    \bigskip
+    \red{Problem}
+    \begin{itemize}
+        \item Given a \red{problem instance}, carry out a particular computational task
+        \item Ex. Sorting is a problem
+    \end{itemize}
+    \red{Problem Instance}
+    \begin{itemize}
+        \item \red{Input} for the specified problem
+    \end{itemize}
+    \red{Problem Solution}
+    \begin{itemize}
+        \item \red{Output} (correct answer) for the specified problem instance
+    \end{itemize}
+    \red{Size of a problem instance}
+    \begin{itemize}
+        \item \red{$Size(I)$} is a positive integer which is a measure of the size of the instance $I$
+    \end{itemize}
 
+    \bigskip
+
+    \red{Algorithm}
+    \begin{itemize}
+        \item a \red{step-by-step process} (e.g. described in pseudocode) for carrying out a series of computations,
+        given an arbitrary problem instance $I$
+    \end{itemize}
+    \red{Algorithm solving a problem}
+    \begin{itemize}
+        \item an algorithm $A$ \red{solves} a problem $\Pi$ if, for every instance $I$ of $\Pi$, $A$ finds
+        (computes) a valid solution for the instance $I$ in finite time
+    \end{itemize}
+    \red{Program}
+    \begin{itemize}
+        \item an \red{implementation} of an algorithm using a specified computer language
+    \end{itemize}
+
+    \red{Pseudocode}
+    \begin{itemize}
+        \item a method of communicating an algorithm to another person
+        \item in contrast, a program is a method of communicating an algorithm to a computer
+        \item General rules of pseudocode:
+        \begin{itemize}
+            \item omits obvious details (variable declarations)
+            \item has limited, if any, error detection
+            \item sometimes uses English descriptions
+            \item sometimes usus mathematical notation
+        \end{itemize}
+    \end{itemize}
+    \pagebreak
+    \subsection{Algorithms and programs}
+    For a problem $\Pi$, we can have several algorithms.\\
+    For an algorithm $A$ solving $\Pi$, we can have several programs (implementations)\\
+    \bigskip
+    Algorithms in practice: Given a problem $\Pi$:\\
+    \begin{enumerate}
+        \item \textbf{\red{Algorithm Design:}} Design an algorithm $A$ that solves $\Pi$
+        \item \textbf{\red{Algorithm Analysis:}} Assess \red{correctness} and \red{efficiency} of $A$
+        \item If acceptable (correct and efficient), implement $A$.
+    \end{enumerate}
     
 
 
