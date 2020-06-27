@@ -1475,7 +1475,7 @@
     In our example:
     \begin{center}
         \begin{tabular}{rl}
-            max & (4,3,0,0)x + 7\\
+            max & $(4,3,0,0)x + 7$\\
             s.t & $\begin{pmatrix}
                 3 & 2 & 1 & 0\\
                 1 & 1 & 0 & 1\\
@@ -1708,6 +1708,287 @@
     \subsection{Vector Basic}
     Consider $Ax = b$ with independent rows\\
     Vector $x$ is a \red{basic solution} if it is a basic solution for some basis $B$\\
+
+    \begin{center}
+        \textbf{MISSING SHITS, CONTINUING WEEK 5 STUFF BELOW! FILL THE REST LATER!}
+    \end{center}
+    \pagebreak
+
+    \section{Finding a feasible solution}
+    Consider\\
+    $$max\{c^Tx:Ax = b, x \geq 0\}$$
+    To run Simplex, we need a \red{feasible} basis. So how do we find a feasible basis?\\
+    Well, an easier question to answer is: How do we find a feasible solution?\\
+    Turns out that the two questions above are equivalent, so we answer the second one.\\
+    \bigskip
+    \textbf{Key Idea:}\\
+    Given 
+    $$max\{c^Tx:Ax = b, x \geq 0\}$$
+    We have 2 algorithms:\\
+    \fbox{\parbox{\linewidth}{{\red{Algorithm 1:}\\
+    \textbf{Input: } $A, b, c$ and a feasible solution\\
+    \textbf{Output: } Optimal solution/detect LP is unbounded.\\}}}\\
+    \bigskip
+    \fbox{\parbox{\linewidth}{{\red{Algorithm 2:}\\
+    \textbf{Input: } $A$ and $b$\\
+    \textbf{Output: } Feasible solution/detect there is no feasible solution\\}}}\\
+    \bigskip
+    Notice Algorithm 1 is basically SIMPLEX.\\
+    If we have Algorithm 2, then we can solve any LP.\\
+    \begin{itemize}
+        \item Using Algo 2 to find a feasible solution, then use Algo 1 to solve it.
+    \end{itemize} 
+    \textbf{Claim:}\\
+    We can use Algo 1 to get Algo 2\\
+    \bigskip
+    \textbf{First Example:}\\
+    Find a feasible solution/detect none exist for:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $(1,2,-1,3)x$\\
+            s.t. & $\begin{pmatrix}
+                1 & 5 & 2 & 1\\
+                -2 & -9 & 0 & 3\\
+            \end{pmatrix}x = \begin{pmatrix}
+                7\\-13\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+    \red{Remark:} It does not depend on the objective function!\\
+    So the problem can be rewritten to:\\
+    \bigskip
+    Find a feasible solution/detect none exist for:\\
+    \begin{align*}
+        \begin{pmatrix}
+            1 & 5 & 2 & 1\\
+            -2 & -9 & 0 & 3\\
+        \end{pmatrix}x &= \begin{pmatrix}
+            7\\-13\\
+        \end{pmatrix}\\
+        x &\geq 0\\
+    \end{align*}
+    Step 1:\\
+    Multiply the equations such that the RHS is non-negative\\
+    \begin{align*}
+        \begin{pmatrix}
+            1 & 5 & 2 & 1\\
+            2 & 9 & 0 & -3\\
+        \end{pmatrix}x &= \begin{pmatrix}
+            7\\13\\
+        \end{pmatrix}\\
+        x &\geq 0\\
+    \end{align*}
+    Step 2:\\
+    Construct an \red{auxiliary problem}.\\
+    Let $x_5$ and $x_6$ be \red{auxiliary variables}\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $x_5 + x_6$\\
+            s.t. & $\begin{pmatrix}
+                1 & 5 & 2 & 1 & 1 & 0\\
+                2 & 9 & 0 & -3 & 0 & 1\\
+            \end{pmatrix}x = \begin{pmatrix}
+                7\\13\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+    \red{Remark:}\\
+    This auxiliary problem is:\\
+    \begin{itemize}
+        \item feasible, since $(0, 0, 0, 0, 7, 13)^T$ is a solution, and
+        \item bounded, as 0 is the lower bound
+    \end{itemize}
+    Therefore, this auxiliary problem has an optimal solution!\\
+    Using Algorithm 1, we can find the optimal solution to the auxiliary problem\\
+    \bigskip
+    $(2, 1, 0, 0, 0, 0)^T$ is an optimal solution tot he auxiliary problem\\
+    Since $x_5 = x_6 = 0$, $(2,1,0,0)^T$ is a feasible solution to the original problem.\\
+    \bigskip
+    \textbf{Second Example:}\\
+    Find a feasible solution/detect non exist for:\\
+    \begin{align*}
+        \begin{pmatrix}
+            5 & 1 & 1\\
+            -1 & 1 & 2\\
+        \end{pmatrix}x &= \begin{pmatrix}
+            1\\5\\
+        \end{pmatrix}\\
+        x &\geq 0\\
+    \end{align*}
+    Step 1:\\
+    Make sure the RHS is non-negative, checked.\\
+    Step 2:\\
+    Construct an auxiliary problem\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $x_4 + x_5$\\
+            s.t.& $\begin{pmatrix}
+                5 & 1 & 1 & 1 & 0\\
+                -1 & 1 & 2 & 0 & 1\\
+            \end{pmatrix}x = \begin{pmatrix}
+                1\\5\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+    Step 3:\\
+    Solve the auxiliary problem using Algorithm 1\\
+    $(0,0,1,0,3)^T$ is the optimal solution to the auxiliary problem.\\
+    However, $(0, 0, 1)^T$ is \red{not} a solution to the original problem.\\
+    In fact, we show that the original problem does not have a feasible solution.\\
+    \bigskip
+    Proof:\\
+    Suppose, for a contradiction, $x_1', x_2', x_3'$ is a solution for the original problem.\\
+    Then $(x_1', x_2', x_3', 0, 0)^T$ is a feasible solution to the auxiliary problem.\\
+    But it has optimal value 0, which is a contradiction since the optimal value of $x_4 + x_5$ is 3\\
+    So the original problem does not have a solution\\
+    \bigskip
+    \subsection{Formalize "Algorithm 2"}
+    Problem: Find a feasible solution/detect none exist for:\\
+    \begin{align*}
+        Ax &= b\\
+        x\geq 0\\
+    \end{align*}
+    Step 1:\\
+    Multiply the equations such that $b$ is non-negative\\
+    Step 2:\\
+    Construct an auxiliary problem ($A m \times n \text{ matrix}$)\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $z = x_{n+1} + \dots + x_{n+m}$\\
+            s.t. & $\begin{pmatrix}
+                A | I\\
+            \end{pmatrix}x = b$\\
+            &$x \geq 0$\\
+        \end{tabular}
+    \end{center}
+    Step 3:\\
+    Solve the auxiliary problem using Algorithm 1.\\
+    $(x1, \dots, x_n, x_{n+1}, \dots, x_{n+m})^T$ is the optimal solution to the auxiliary problem.\\
+    \bigskip
+    When optimal value of $z \geq 0$, the original problem has no solution.\\
+    Otherwise, $(x1, \dots, x_n)^T$ is a solution to the original problem.\\
+    \bigskip
+    Proof:\\
+    Suppose, for a contradiction, the original problem has a solution $x_1', \dots, x_n'$\\
+    Then $(x_1', \dots, x_n', 0, \dots, 0)^T$ is an optimal solution for the auxiliary problem.\\
+    But it has objective value of 0, which creates a contradiction.\\
+    \pagebreak
+    \subsection{The 2-Phase Method}
+    To solve:
+    $$max \{c^Tx:ax = b, x\geq 0\}$$
+    we proceed in two phases:\\
+    \blue{Phase 1:} Find a feasible solution/detect none exist.\\
+    \blue{Phase 2:} Give the feasible solution, find an optimal solution/detect LP unbounded.
+    \bigskip\\
+    \textbf{Example Problem: }\\
+    Solve the following LP:
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $(1,1,1)x$\\
+            s.t. & $\begin{pmatrix}
+                1 & 2 & -1\\
+                1 & -1 & 1\\
+            \end{pmatrix}x = \begin{pmatrix}
+                4\\4\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+
+    Phase 1: Find a feasible solution/detect none exist.\\
+    Make RHS non-negative, construct an auxiliary problem\\
+    \begin{center}
+        \begin{tabular}{rl}
+            min & $x_4 + x_5$\\
+            s.t. & $\begin{pmatrix}
+                1 & 2 & -1 & 1 & 0\\
+                1 & -1 & 1 & 0 & 1\\
+            \end{pmatrix}x = \begin{pmatrix}
+                4\\4\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+    Note that it is not in SEF, so we replace min by max.\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $-x_4 - x_5$\\
+            s.t. & $\begin{pmatrix}
+                1 & 2 & -1 & 1 & 0\\
+                1 & -1 & 1 & 0 & 1\\
+            \end{pmatrix}x = \begin{pmatrix}
+                4\\4\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+    Note that it is not in canonical form.\\
+    To rewrite $B = \{4,5\}$, we can:
+    \begin{itemize}
+        \item use the formulae, OR
+        \item Notice $A_B = I$ and rewrite the objective function as follow:\\
+    \end{itemize}
+    \begin{align*}
+        z &= (0,0,0,-1,-1)x\\
+        0 &= (1,2,-1,1,0)x - 4\\
+        0 &= (1,-1,1,0,1)x - 4\\
+        \cline{1-2}
+        z &= (2,1,0,0,0)x - 8\\
+    \end{align*}
+    So the auxiliary problem in SEF canonical form is:\\
+    \begin{center}
+        \begin{tabular}{rl}
+            max & $(2,1,0,0,0)x - 8$\\
+            s.t. & $\begin{pmatrix}
+                1 & 2 & -1 & 1 & 0\\
+                1 & -1 & 1 & 0 & 1\\
+            \end{pmatrix}x = \begin{pmatrix}
+                4\\4\\
+            \end{pmatrix}$\\
+            & $x \geq 0$\\
+        \end{tabular}
+    \end{center}
+    Use SIMPLEX to solve it, starting from $B$.\\
+    $B = \{1,4\}$ is an optimal basis with the basic solution $(4, 0, 0, 0, 0)^T$\\
+    $z = 0$ implies that $(4, 0, 0)^T$ is a feasible solution for the original problem.\\
+    Notice that $(4, 0, 0)^T$ is a basic solution and it will always be the case.\\
+    \bigskip
+    For what basis $B$ is $x = (4,0,0)^T$ a basic solution?\\
+    Since $x_1 \neq 0 \rightarrow 1 \in B$\\
+    Since second column is independent from column 1, $B = \{1, 2\}$ is a feasible basis.\\
+    \bigskip
+    Phase 2:\\
+    We now solve the problem using SIMPLEX, starting from $B = \{1, 2\}$\\
+    $x = (0,8,12)^T$ is an optimal solution.\\
+    \bigskip
+    \subsection{Theoretical Consequences of 2 phase method}
+    Recall the theorem:\\
+    Exactly one of the following holds for the LP:
+    $$max\{c^Tx:Ax = b, x\geq 0\}$$
+    \begin{enumerate}
+        \item it is infeasible
+        \item it is unbounded
+        \item it has an optimal solution that is \red{basic} (at least one optimal solution is basic)
+    \end{enumerate}
+    \bigskip
+    Proof:\\
+    Run 2-Phase method with SIMPLEX using Bland's rule (choosing lowest number variable)\\
+    (Recall that Bland's Rule ensures that SIMPLEX terminates)\\
+    If it stops at Phase 1, the LP is infeasible.\\
+    Otherwise, it will find a feasible solution and run phase 2, which will show either the LP is unbounded, or find an optimal solution that is basic.\\
+    \bigskip
+    \textbf{Fundamental Theorem of Linear Programming}
+    Consider an \red{arbitrary LP}. Exactly one of the following holds:
+    \begin{enumerate}
+        \item It is infeasible
+        \item It is unbounded
+        \item It has an optimal solution
+    \end{enumerate}
+    Proof is simple, convert the LP to SEF, then use previous theorem.
+    \pagebreak
     
 
 \end{document}
