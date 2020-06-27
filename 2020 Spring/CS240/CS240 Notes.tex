@@ -157,7 +157,180 @@
         \item \textbf{\red{Algorithm Analysis:}} Assess \red{correctness} and \red{efficiency} of $A$
         \item If acceptable (correct and efficient), implement $A$.
     \end{enumerate}
-    
+    \pagebreak
 
+    \section{Analysis of Algorithms I}
+    \begin{itemize}
+        \item \textbf{\red{Running Time:}} In this course, we are primarily concerned with the \red{amount of time} a program takes to run
+        \item \textbf{\red{Space:}} We also may be interested in the \red{amount of memory} the program requires
+        \item The amount of time and/or memory required by a program will depend on \red{$Size(I)$}, the size of the given problem instance $I$
+    \end{itemize}
+
+    \subsection{Running time of Algorithms/Programs}
+    Option 1: \red{Experimental Studies}
+    \begin{itemize}
+        \item Write a program implementing the algorithm
+        \item Run the programs with various sizes of input and measure the actual running time
+        \item Plot/compare the results
+    \end{itemize}
+    Shortcomings:
+    \begin{itemize}
+        \item Implementation may be complicated/costly
+        \item Timings are affected by many factors: hardware, software environment, and human factors
+        \item We cannot test all inputs (what are good \red{sample inputs}?)
+        \item We cannot easily compare two algorithms/programs
+    \end{itemize}
+    We want a framework that:
+    \begin{itemize}
+        \item Does not require implementing the algorithm
+        \item Is independent of the hardware/software environment
+        \item Takes into account all input instances
+    \end{itemize}
+    Which means, we need some \red{simplifications}\\
+    \bigskip
+    We will develop several aspects of algorithm analysis:
+    \begin{itemize}
+        \item Algorithms are presented in structured high-level \red{pseudocode}, which is language-independent
+        \item Analysis of algorithms is based on an \red{idealized computer model}
+        \item The efficiency of an algorithm (with respect to time) is measure din terms of its \red{growth rate}, aka the \red{complexity} of the algorithm
+    \end{itemize}
+    \pagebreak
+    
+    \subsection{Simplifications of running time}
+    Overcome dependency on hardware/software
+    \begin{itemize}
+        \item Express algorithms using pseudocode
+        \item Instead of time, count the number of \red{primitive operations}
+        \item Implicit assumption: primitive operations have fairly similar, though different, running time on different systems
+    \end{itemize}
+    Random Access Machine (RAM) model:
+    \begin{itemize}
+        \item it has a set of memory cells, each of which stores one item (word) of data
+        \item any \red{access to a memory location} takes constant time
+        \item any \red{primitive operation} takes constant time
+        \item the \red{running time} of a program can be computed to be the number of memory accesses plus the number of primitive operations
+    \end{itemize}
+    This is an idealized model, so these assumptions may not be valid for a "real" computer\\
+    \bigskip
+
+    Simplify Comparisons
+    \begin{itemize}
+        \item Example: Compare $100n$ with $10n^2$
+        \item Idea: Use \red{order notation}
+        \item Informally: ignore constants and lower order terms 
+    \end{itemize}
+    We will simplify our analysis by considering the behaviour of algorithms for large input sizes
+    \pagebreak
+    
+    \subsection{Asymptotic Notation}
+    \red{$O$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in O(g(n))$} if there exist constants $C > 0$ and $n_0 > 0$ such that\\
+        $|f(n)| \leq c|g(n)|$ for all $n \geq n_0$
+        \item Example: $f(n) = 75n + 500$ and $g(n) = 5n^2$, choose $c = 1$ and $n_0 = 20$ can prove $f(n) \in O(g(n))$
+        \item Note: the absolute value signs int eh definition are irrelevant for analysis of run-time or space, but are useful in other application sof asymptotic notation
+    \end{itemize}
+    \textbf{Example of Order Notation:}\\
+    In order to prove that $2n^2 + 3n + 11 \in O(n^2)$ from first principles, we need to find $c$ and $n_0$ such that:
+    \begin{center}
+        $0 \leq 2n^2 + 3n + 11 \leq cn^2$ for all $n \geq n_0$
+    \end{center}
+    Note that all choices of $c$ and $n_0$ will work.
+    \bigskip
+    \textbf{Solution:}\\
+    Choose $n_0 = 1$.\\
+    \begin{align*}
+        n_0 &\leq n \rightarrow 1 \leq n \rightarrow 1 \leq n^2 \rightarrow 11 \leq 11n^2\\
+        n_0 &\leq n \rightarrow 1 \leq n \rightarrow n \leq n^2 \rightarrow 3n \leq 3n^2\\
+        \text{We also have: } 2n^2 &\leq 2n^2\\
+    \end{align*}
+    So we have:\\
+    $$2n^2 + 3n + 11 \leq 2n^2 + 3n^2 + 11n^2 \leq 16n^2$$
+    So let $c = 16$ and $n_0 = 1$, and we have $|f(n)| < c|g(n)|$ for all $n \geq n_0$.\\
+    Thus $2n^2 + 3n + 11 \in O(n^2)$.\qed\\
+    
+    \bigskip
+    We want a \textbf{\red{tight}} asymptotic bound. So we have:\\
+    \red{$\Omega$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in \Omega (g(n))$} if there exist constants $c > 0$ and $n_0 > 0$ such that\\
+        $c|g(n)| \leq |f(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    \red{$\Theta$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in \Theta (g(n))$} if there exist constants $c_1, c_2 > 0$, and $n_0 > 0$ such that\\
+        $c_1|g(n)| \leq |f(n)| \leq c_2|g(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    \red{Notice:}
+    $$f(n) \in \Theta (g(n)) \longleftrightarrow f(n) \in O(g(n)) \textbf{ and } f(n) \in \Omega (g(n))$$
+    \pagebreak
+    
+    \textbf{Example:}\\
+    Prove that $\frac{1}{2}n^2 - 5n \in \Omega (n^2)$ from first principles.\\
+    \bigskip
+    \textbf{Solution:}\\
+    Let $n_0 = 20$. We find $c$.\\
+    \begin{align*}
+        n_0 = 20 \leq n &\rightarrow 20n \leq n^2 \rightarrow 5n \leq \frac{1}{4}n^2 \rightarrow 0 \leq \frac{1}{4}n^2 - 5n\\
+        \frac{1}{2}n^2 - 5n &= \frac{1}{4}n^2 + \underbrace{\frac{1}{4}n^2 - 5n}_{\geq 0} \geq \frac{1}{4}n^2
+    \end{align*}
+    Since $\frac{1}{2}n^2 - 5n \geq \frac{1}{4}n^2$, we choose $c = \frac{1}{4}$ and we have $\frac{1}{2}n^2 - 5n \in \Omega (n^2)$.\qed\\
+    \bigskip
+    
+    \textbf{\red{Quick Summary:}}\\
+    \begin{itemize}
+        \item $O \leftrightarrow$ asymptotically not bigger
+        \item $\Omega \leftrightarrow$ asymptotically not smaller
+        \item $\Theta \leftrightarrow$ asymptotically the same
+    \end{itemize}
+
+    We have $f(n) = 2n^2 + 3n + 11 \in \Theta(n^2)$    
+    \begin{itemize}
+        \item How do we express that $f(n)$ is \textbf{\red{asymptotically strictly smaller}} than $n^3$?
+    \end{itemize}
+    \bigskip
+    \red{$o$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in o(g(n))$} if for \textbf{\red{all}} constants $c > 0$, there exists a constant $n_0 > 0$ such that\\
+        $|f(n)| < c|g(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    \red{$\omega$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in \omega (g(n))$} if for \textbf{\red{all}} constants $c > 0$, there exists a constant $n_0 > 0$ such that\\
+        $0 \leq c|g(n)| < |f(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    The $o$ and $\omega$ notations are rarely proved from first principles.
+    \pagebreak
+
+    \subsection{Relationships between Order Notations}
+    \begin{itemize}
+        \item $f(n) \in \Theta(g(n)) \leftrightarrow g(n) \in \Theta(f(n))$
+        \item $f(n) \in O(g(n)) \leftrightarrow g(n) \in \Omega(f(n))$
+        \item $f(n) \in o(g(n)) \leftrightarrow g(n) \in \omega(f(n))$\\
+        \bigskip
+        \item $f(n) \in o(g(n)) \rightarrow f(n) \in O(g(n))$
+        \item $f(n) \in o(g(n)) \rightarrow f(n) \notin \Omega(g(n))$
+        \item $f(n) \in \omega(g(n)) \rightarrow f(n) \in \Omega(g(n))$
+        \item $f(n) \in \omega(g(n)) \rightarrow f(n) \notin O(g(n))$
+    \end{itemize}
+    
+    \subsection{Algebra of Order Notations}
+    \textbf{\red{Identity rule}}
+    \begin{itemize}
+        \item $f(n) \in \Theta(f(n))$
+    \end{itemize}
+    \textbf{\red{Maximum rules}}\\
+    Suppose that $f(n) > 0$ and $g(n) > 0$ for all $n \geq n_0$, then:
+    \begin{itemize}
+        \item $O(f(n) + g(n)) = O(max\{f(n), g(n)\})$
+        \item $\Omega(f(n) + g(n)) = \Omega(max\{f(n), g(n)\})$
+    \end{itemize}
+    \textbf{\red{Transitivity}}
+    \begin{itemize}
+        \item if $f(n) \in O(g(n))$ and $g(n) \in O(h(n))$, then $f(n) \in O(h(n))$
+        \item if $f(n) \in \Omega(g(n))$ and $g(n) \in \Omega(h(n))$, then $f(n) \in \Omega(h(n))$
+    \end{itemize}
+
+    \subsection{Techniques for Order Notation}
 
 \end{document}
