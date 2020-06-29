@@ -754,7 +754,188 @@
     \pagebreak
 
     \section{Heap}
+    \subsection{Abstract Data Types}
+    ADT\\
+    \begin{itemize}
+        \item A description of \red{information} and a collection of \red{operations} on that information
+        \item The information is accessed \red{only} through the operations
+    \end{itemize}
+    We have various \red{realizations} of an ADT, which specify:
+    \begin{itemize}
+        \item how the information is stored (\red{Data Structure})
+        \item how the operations are performed (\red{Algorithms})
+    \end{itemize}
+
+    \subsection{Stack ADT}
+    Stack
+    \begin{itemize}
+        \item An ADT consisting of a collection of items with operations:
+        \begin{itemize}
+            \item \red{push}: inserting an item 
+            \item \red{pop}: removing the most recently inserted item
+        \end{itemize}
+        \item Items are removed in LIFO order
+        \item Items enter the stack at the \red{top} and are removed from the \red{top}
+        \item We can have extra operations: \red{size}, \red{isEmpty}, and \red{top}
+    \end{itemize}
+    Applications
+    \begin{itemize}
+        \item addresses of recently visited websites
+        \item procedure calls
+    \end{itemize}
+
+    Realizations of Stack ADT
+    \begin{itemize}
+        \item using arrays
+        \item using linked lists
+    \end{itemize}
+    \pagebreak
+
+    \subsection{Queue ADT}
+    Queue
+    \begin{itemize}
+        \item and ADT consisting of a collection of items with operations
+        \begin{itemize}
+            \item \red{enqueue}: inserting an 
+            \item \red{dequeue}: removing the last recently inserted item
+        \end{itemize}
+        \item items are removed in FIFO order
+        \item items enter the queue at the \red{rear} and are removed from the \red{front}
+        \item we can have extra operations: \red{size}, \red{isEmpty}, and \red{front}
+    \end{itemize}
+    Applications
+    \begin{itemize}
+        \item waiting lines
+        \item printer queues
+    \end{itemize}
+    Realizations of Queue ADT
+    \begin{itemize}
+        \item using (circular) arrays
+        \item using linked lists
+    \end{itemize}
+    \bigskip
+
+    \subsection{Priority Queue ADT}
+    Priority Queue
+    \begin{itemize}
+        \item An ADT consisting of a collection of items (each having a \red{priority}) with operations
+        \begin{itemize}
+            \item \red{insert}: inserting and item tagged with a priority
+            \item \red{deleteMax}: removing the item of \red{highest} priority
+        \end{itemize}
+        \item \red{deleteMax} is also called \red{extractMax} or \red{getMax}
+        \item the priority is also called \red{key}
+    \end{itemize}
+    The above definition is for a \red{maximum-oriented} priority queue.\\
+    A \red{minimum-oriented} priority queue is defined in the natural way, replacing operation \red{deleteMax} by \red{deleteMin}\\
+    \bigskip
+    Applications
+    \begin{itemize}
+        \item typical todo list
+        \item simulation systems
+        \item sorting
+    \end{itemize}
+    \pagebreak
     
+    \textbf{Using a PQ to sort}\\
+    \begin{tabbing}
+        PQ-Sort \= \+ $(A[0 \dots n-1])$\\
+            initialize PQ to an empty priority queue\\
+            for \= $k \leftarrow 0$ to $n-1$ do\\
+                \> PQ.insert(A[k], A[k]) \hspace{1cm} (priority and item are equal to A[k])\\
+            for \= $k \leftarrow n-1$ down to $0$ do\\
+                \> $A[k] \leftarrow PQ.deleteMax()$\\
+    \end{tabbing}
+    \begin{itemize}
+        \item runtime $O(\sum_{0\leq i < n}insert(i) + \sum_{0 \leq i < n}deleteMax(i))$
+        \item depends on how we implement hte priority queue
+    \end{itemize}
+    \bigskip
+
+    \subsection{Realizations of Priority Queues}
+    Realization 1: unsorted arrays\\
+    \begin{itemize}
+        \item \red{insert}: $O(1)$ (append to end)
+        \item \red{deleteMax}: $O(n)$ (linear search for max)
+    \end{itemize}
+    Note: we assume \red{dynamic arryas}. i.e. expand by doubling as needed.\\
+    Amortized over all insertions this takes $O(1)$ extra time.\\
+    Proof:\\
+    Suppose we start from $A$ of length 1. We do $n$ insert, $n = 2^k$\\
+    \begin{align*}
+        \text{Total cost of inserts } &= O(\underbrace{1+1+ \dots +1}_{\text{n times}} + \underbrace{1 + 2 + 4 + 8 + \dots + 2^{k-1}}_{2^k-1 = n-1})\\
+        &= O(2n-1)\\
+        &= O(n)\\
+    \end{align*}
+
+    Using unsorted linked lists is identical.\\
+    \red{PQ-sort} with this realization yields \red{selection sort}, so runtime is:
+    $$O(\sum_{i<n}i) = O(n^2)$$
+    \bigskip
+    
+    Realization 2: sorted arrays\\
+    \begin{itemize}
+        \item \red{insert}: $O(n)$
+        \item \red{deleteMax}: $O(1)$
+    \end{itemize}
+
+    Using sorted linked lists is identical.\\
+    \red{PQ-sort} with this realization yields \red{insertion sort}, runtime is:
+    $$O(\sum_{i < n}i) = O(n^2)$$
+    \pagebreak
+
+    \subsection{Heaps (binary)}
+    Binary heap
+    \begin{itemize}
+        \item is a certain type of binary tree
+        \item Recall a few things:
+        \begin{itemize}
+            \item a binary tree is either
+            \begin{itemize}
+                \item empty, or
+                \item consist of three parts:\\
+                a node \& 2 binary trees (left subtree and right subtree)
+            \end{itemize}
+            \item few terms: root, leaf, parent, child, level sibling, ancestor, descendant, etc.
+            \item any binary tree with $n$ nodes has height at least\\
+            $\log(n + 1) - 1 \in \Omega(\log n)$
+        \end{itemize}
+        \item Also remember that the height of a non-empty tree is the length of the longest path from root to node
+        \item The height of the empty tree is -1
+    \end{itemize}
+    \bigskip
+    \red{Heap}
+    \begin{itemize}
+        \item is a binary tree with the following two properties
+        \begin{itemize}
+            \item \red{Structural Property}: All the levels of a heap are completely filled, except )possibly) for the last level.
+            The filled items in the last level are \red{left-justified}.
+            \item \red{Heap-order Property}: For any node $i$, the key of the parent of $i$ is larger than or equal to key of $i$
+        \end{itemize}
+    \end{itemize}
+
+    The full name for this is \red{max-oriented binary heap}
+    \textbf{Lemma:} The height of a heap with $n$ nodes is $\Theta(\log n)$
+    \bigskip
+
+    \textbf{\red{Storing Heaps in Arrays}}
+    \begin{itemize}
+        \item \textbf{Heaps should \red{not} be stored as binary trees!}
+        \item Let $H$ be a heap of $n$ items and let $A$ be an array of size $n$. Store root in $A[0]$ and continue with elements 
+        \red{level-by-level} from top to bottom, in each level \red{left-to-right}
+    \end{itemize}
+    
+    It is easy to navigate the heap using this array representation:
+    \begin{itemize}
+        \item the \red{root} node is at index 0
+        \item the \red{left child} of node $i$ (if it exists) is node $2i + 1$
+        \item the \red{right child} of node $i$ (if it exists) is node $2i + 2$
+        \item the \red{parent} of node $i$ (if it exists) is node $\lfloor\frac{i-1}{2}\rfloor$
+        \item the \red{last} node is $n-1$
+    \end{itemize}
+    \pagebreak
+
+    PAUSED, Speed run for midterm
 
 
 
