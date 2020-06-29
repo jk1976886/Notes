@@ -332,5 +332,430 @@
     \end{itemize}
 
     \subsection{Techniques for Order Notation}
+    Suppose that $f(n) > 0$ and $g(n) > 0$ for all $n > n_0$. Suppose that:\\
+    $$L = \lim_{n\rightarrow \infty}\frac{f(n)}{g(n)}$$
+    Then\\
+    $$f(n) \in \begin{cases}
+        \begin{tabular}{ll}
+            $o(g(n))$ & if $L = 0$\\
+            $\Theta(g(n))$ & if $0 < L < \infty$\\
+            $\omega(g(n))$ & if $L = \infty$\\
+        \end{tabular}
+    \end{cases}$$
+    The required can often be computed using \red{\textit{l'H$\hat{o}$pital's rule}}.\\
+    Note that this result gives \red{sufficient} (but not necessary) conditions for the stated conclusions to hold.\\
+    \pagebreak
+
+    Example1:\\
+    Let $f(n)$ be a polynomial of degree $d \geq 0$\\
+    $$f(n) = c_dn^d + c_{d - 1}n^{d-1} + \dots + c_1n + c_0$$
+    for some $c_d > 0$.\\
+    Then $f(n) \in \Theta(n^d)$.\\
+    \bigskip
+    Solution:\\
+    \begin{align*}
+        \lim_{n \rightarrow \infty} \frac{f(n)}{n^d} &= \lim_{n \rightarrow \infty} \frac{(c_dn^d + c_{d - 1}n^{d-1} + \dots + c_1n + c_0)'}{(n^d)'}\\
+        &= \lim_{n \rightarrow \infty} \frac{(c_d)(d)n^{d-1} + (c_{d - 1})(d-1)n^{d-2} + \dots + (c_1)(1)n^0 + 0)'}{dn^{d-1}}\\
+        &= \lim_{n \rightarrow \infty} \frac{(c_d)(d)n^{d-1}}{dn^{d-1}} + \lim_{n \rightarrow \infty} \frac{(c_{d - 1})(d-1)n^{d-2}}{dn^{d-1}} + \dots + \lim_{n \rightarrow \infty}\frac{(c_1)(1)n^0}{dn^{d-1}}\\
+        &= \lim_{n \rightarrow \infty} \frac{(c_d)(d)n^{d-1}}{dn^{d-1}}\\
+        &= \lim_{n \rightarrow \infty} c_d\\
+        &= c_d
+    \end{align*}
+    Since $c_d > 0$, we know that $f(n) \in \Theta(n^d)$, as desired. \qed\\
+    
+    \bigskip
+    Example2:\\
+    Prove that $f(n) = n(2 + \sin(\frac{n\pi}{2}))$ is $\Theta(n)$.\\
+    Note that $\lim_{n \rightarrow \infty} (2 + \sin(\frac{n\pi}{2}))$ does not exist.\\
+    \bigskip
+    Solution:\\
+    \begin{align*}
+        \lim_{n \rightarrow \infty}\frac{f(n)}{g(n)} &= \lim_{n \rightarrow \infty}\frac{n(2 + \sin(\frac{n\pi}{2}))}{n}\\
+        &= \underbrace{\lim_{n \rightarrow \infty}(2 + \sin(\frac{n\pi}{2}))}_{\text{DNE, no conclusion}}\\
+    \end{align*}
+    Think another way:
+    \begin{align*}
+        -1 &\leq \sin(\frac{n\pi}{2}) \leq 1\\
+        1 &\leq 2 + \sin(\frac{n\pi}{2}) \leq 3\\
+        \text{Let } n_0 &= 1 \text{, so } n \geq 1\\
+        1n &\leq 2 + \sin(\frac{n\pi}{2}) \leq 3n\\
+    \end{align*}
+    So we have $n_0 = 1$, $c_1 = 1$ and $c_0 = 1$. And thus $n(2 + \sin(\frac{n\pi}{2})) \in \Theta(n)$ \qed \\
+    \pagebreak
+
+    \subsection{Growth Rates}
+    \begin{itemize}
+        \item If $f(n) \in \Theta(g(n))$, then the \red{growth rates} of $f(n)$ and $g(n)$ are the \red{same}
+        \item If $f(n) \in o(g(n))$, then the \red{growth rates} of $f(n)$ is \red{less than} $g(n)$
+        \item If $f(n) \in \omega(g(n))$, then the \red{growth rates} of $f(n)$ is \red{greater than} $g(n)$
+        \item Typically, $f(n)$ may be complicated and $g(n)$ is chosen to be a very simple function
+    \end{itemize}
+    \bigskip
+
+    Example3:\\
+    Compare the growth rates of $\log n$ and $n$.\\
+    Note: In this course, we default the base of $\log$ to be 2, so by $\log n$ we mean $\log_{2}n$\\
+    \bigskip
+    Solution:\\
+    \begin{align*}
+        \lim_{n \rightarrow \infty} \frac{\log n}{n} &\overset{H}{=} \lim_{n \rightarrow \infty}\frac{\frac{1}{n\ln 2}}{1}\\
+        &= \lim_{n \rightarrow \infty}\frac{1}{n\ln 2}\\
+        &= 0\\
+    \end{align*}
+    So $\log n \in o(n)$ and \\
+    \bigskip
+    Now compare the growth rates of $(\log n)^c$ and $n^d$, where $c, d > 0$ are arbitrary numbers.\\
+    \begin{align*}
+        \lim_{n \rightarrow \infty} \frac{(\log n)^c}{n^d} &\overset{H}{=} \lim_{n \rightarrow \infty} \frac{c(\log n)^{c-1}\frac{1}{n\ln 2}}{dn^{d-1}}\\
+        &= \lim_{n \rightarrow \infty} \frac{c(\log n)^{c-1}}{d(\ln 2)n^d}\\
+        &\overset{H}{=} \lim_{n \rightarrow \infty} \frac{c(c-1)(\log n)^{c-2}}{d^2(\ln 2)^2n^d}\\
+        &\overset{H}{=}\dots\\
+        &\overset{H}{=} \lim_{n \rightarrow \infty} \frac{c!}{(\ln 2)^cd^cn^d}\\
+        &= 0\\
+    \end{align*}
+    So $(\log n)^c \in o(n^d)$, meaning $(\log n)^c$ has growth rate less than $n^d$ for arbitrary $c,d > 0$.\\
+    This means, even if we have $(\log n)^10000$, we will still have a growth rate less than $n^2$\\
+    \pagebreak
+
+    \subsection{Common Growth Rates}
+    Commonly encountered growth rates in analysis of algorithms include the following (in increasing order of growth rate):
+    \begin{itemize}
+        \item $\Theta(1)$ (\red{constant complexity})
+        \item $\Theta(\log n)$ (\red{logarithmic complexity})
+        \item $\Theta(n)$ (\red{linear complexity})
+        \item $\Theta(n\log n)$ (\red{linearithmic})
+        \item $\Theta(n \log^k n)$ for some constant k (\red{quasi-linear})
+        \item $\Theta(n^2)$ (\red{quadratic complexity})
+        \item $\Theta(n^3)$ (\red{cubic complexity})
+        \item $\Theta(2^n)$ (\red{exponencial complexity})
+    \end{itemize}
+    \bigskip
+    It is interesting to see how the running time is affected when the size of the problem instance doubles (i.e. $n \rightarrow 2n$)
+    \bigskip
+    \begin{tabular}{l|lcl}
+        constant complexity: & $T(n) = c$ & $\rightarrow$ & $T(2n) = c$\\
+        logarithmic complexity: & $T(n) = c\log n$ & $\rightarrow$ & $T(2n) = T(n) + c$\\
+        linear complexity: & $T(n) = cn$ & $\rightarrow$ & $T(2n) = 2T(n)$\\
+        linearithmic: & $T(n) = cn\log n$ & $\rightarrow$ & $T(2n) = 2T(n) + 2cn$\\
+        quadratic complexity: & $T(n) = cn^2$ & $\rightarrow$ & $T(2n) = 4T(n)$\\
+        cubic complexity: & $T(n) = cn^3$ & $\rightarrow$ & $T(2n) = 8T(n)$\\
+        exponencial complexity: & $T(n) = c2^n$ & $\rightarrow$ & $T(2n) = \frac{T(n)^2}{c}$\\
+    \end{tabular}
+    \pagebreak
+
+    \subsection{Techniques for Algorithm Analysis}
+    Goal: Use asymptotic notation to simplify run-time analysis\\
+    \begin{itemize}
+        \item running time of an algorithm depends on the \red{input size} n
+        \item identify \red{elementary operations} that require $\Theta(1)$ time
+        \item the complexity of a loop is expressed as the \red{sum} of the complexities of each iteration of the loop
+        \item Nested loops: starts with the innermost loop and proceed outwards.\\
+        This gives \red{nested summations}
+    \end{itemize}
+    \bigskip
+    Example:\\
+    \begin{tabbing}
+        Test1 \= \+\\
+            sum $\leftarrow$ 0\\
+            for \=$i \leftarrow 1$ to $n$ do\\
+                \>for \=$j\leftarrow i$ to $n$ do\\
+                    \>\>sum $\leftarrow$ sum + $(i + j)^2$\\
+            return sum
+    \end{tabbing}
+    We have:
+    \begin{align*}
+        T(n) &= c_0 + c_1 + \sum_{i = 1}^n \sum_{j = i}^n c_2\\
+        &= c_0 + c_1 + \sum_{i = 1}^n c_2(n - i + 1)\\
+        &= c_0 + c_1 + \sum_{i = 1}^n c_2n - \sum_{i = 1}^n c_2i + \sum_{i = 1}^n c_2\\
+        &= c_0 + c_1 + c_2n^2 - c_2(\frac{n(n + 1)}{2}) + c_2n\\
+        &= c_0 + c_1 + c_2(n^2 - \frac{n^2 - n}{2} + n)\\
+        &= c_0 + c_1 + \frac{c_2}{2}(n^2 + n)\\
+    \end{align*}
+    So $T(n) \in \Theta (n^2)$\\
+    \pagebreak
+
+    Another way of doing the same thing is to find upper bound and lower bound.
+    \begin{align*}
+        T(n) &= c_0 + c_1 + \sum_{i = 1}^n \sum_{j = i}^n c_2 \leq c_0 + c_1 + \sum_{i = 1}^n \sum_{j = 1}^n c_2\\
+        &= c_0 + c_1 + c_2\sum_{i = 1}^n \sum_{j = 1}^n 1\\
+        &= c_0 + c_1 + c_2n^2\\
+    \end{align*}
+    So $T(n) \in O(n^2)$\\
+    \begin{align*}
+        T(n) &= c_0 + c_1 + \sum_{i = 1}^n \sum_{j = i}^n c_2 \geq c_0 + c_1 + \sum_{i = 1}^{n/2} \sum_{j = 1}^n c_2\\
+        &\geq c_0 + c_1 + \sum_{i = 1}^{n/2} \sum_{j = n/2 + 1}^n c_2\\
+        &= c_0 + c_1 + \sum_{i = 1} ^{n/2}c_2\frac{n}{2}\\
+        &= c_0 + c_1 + c_2\frac{n}{2}\sum_{i = 1} ^{n/2}1\\
+        &= c_0 + c_1 + c_2(\frac{n}{2})(\frac{n}{2})\\
+        &= c_0 + c_1 + c_2(\frac{n^2}{4})\\
+    \end{align*}
+    So $T(n) \in \Omega(n^2)$. Therefore $T(n) \in \Theta(n^2)$
+    \bigskip
+
+    Two general strategies are as follows:
+    \begin{itemize}
+        \item Use $\Theta$-bounds \red{throughout the analysis} and obtain a $\Theta$-bound for the complexity of the algorithm
+        \item Prove a $O$-bound and a \red{matching} $\Omega$-bound \red{separately}.\\
+        Use upper bounds (for $O$-bounds) and lower bounds (for $\Omega$-bounds) early and frequently\\
+        This may be easier because upper/lower bounds are easier to sum.
+    \end{itemize}
+    \pagebreak
+
+    \subsection{Complexity of Algorithms}
+    Algorithm can have different running times on two instances of the same size\\
+    \begin{tabbing}
+        Test3($A, n$)\\
+        $A$: array \= \+ of size $n$\\
+            for \= \+ $i\leftarrow 1$ to $n - 1$ do\\
+                $j \leftarrow i$\\
+                while \= \+ $j > 0$ and $A[j] > A[j-1]$ do\\
+                    swap $A[j]$ and $A[j-1]$\\
+                    $j \leftarrow j - 1$\\
+    \end{tabbing}
+
+    Let $T_A(I)$ denote the running time of an algorithm $A$ on instance $I$.\\
+    \bigskip
+    \textbf{\red{Worst-case complexity of an algorithm}}\\
+    \begin{itemize}
+        \item it is a function $f: \mathbb{Z}^+ \rightarrow \mathbb{R}$ mapping $n$ (the input size) to
+        the \red{longest} running time for any input instance of size $n$
+        $$T_A(n) = max\{T_A(I):Size(I) = n\}$$
+    \end{itemize}
+    \textbf{\red{Average-case complexity of an algorithm}}\\
+    \begin{itemize}
+        \item it is a function $f: \mathbb{Z}^+ \rightarrow \mathbb{R}$ mapping $n$ (the input size) to 
+        the \red{average} running time of $A$ over all instances of size $n$
+        $$T_A^{avg}(n) = \frac{1}{|\{I:Size(I) = n\}|}\sum_{I:Size(I) = n}T_A(I)$$
+    \end{itemize}
+    \bigskip
+    The average is more important in real life, but it is also harder to calculate.\\
+    In this course, we are talking about \textbf{\red{worst case}} complexity by default.\\
+    \bigskip
+    We need to convince/explain why a case is the worst case and compute its running time.\\
+    \bigskip
+    In the example of Test3 above, the worst number of times the while loop will run is $i$ 
+    times. So $\sum_{i = 1}^{n-1}ic \in \Theta(n^2)$.\\
+    Note that the average running time for this code is also $\Theta(n^2)$.
+    \pagebreak
+
+    \subsection{$O$-notation and Complexity of Algorithms}
+    We should not compare complexity of algorithms using $O$-notation because:
+    \begin{itemize}
+        \item the worst-case run-time may only be achieved on some instances
+        \item $O$-notation is an upper bound
+    \end{itemize}
+    So if we want to compare algorithms, we should always use $\Theta$-notation.
+    
+    \bigskip
+    \subsection{Analysis of Merge Sort}
+    \textbf{Design of Merge Sort}\\
+    \textbf{\blue{Input:}} Array $A$ of $n$ integers
+    \begin{itemize}
+        \item Step 1: We split $A$ into two sub-arrays: $A_L$ consists of the first $\lceil\frac{n}{2}\rceil$
+        elements in $A$ and $A_R$ consists of the last $\lfloor\frac{n}{2}\rfloor$ elements in $A$
+        \item Step 2: \red{Recursively} run MergeSort on $A_L$ and $A_R$
+        \item Step 3: After $A_L$ and $A_R$ have been sorted, use a function \red{Merge} to merge them into a
+        single sorted array
+    \end{itemize}
+    \bigskip
+    \textbf{MergeSort implementation}\\
+    \begin{tabbing}
+        MergeSort($A, l \leftarrow 0, r \leftarrow n-1)$\\
+        $A$: array \= \+ of size $n$, $0 \leq l \leq r \leq n-1$\\
+            if \=($r \leq l$) then\\
+                \> return\\
+            else\\
+                \> m = (r + l)/2\\
+                \> MergeSort(A, l, m)\\
+                \> MergeSort(A, m+1, r)\\
+                \> Merge(A, l, m, r)\\
+    \end{tabbing}
+    $$T(n) = 2T(\frac{n}{2}) + \Theta(Merge)$$
+    \pagebreak
+
+    \textbf{Merge implementation}
+    \begin{tabbing}
+        Merge(A, l, m, r)\\
+        $A[0\dots n-1]$ \= \+ is an array, $A[l\dots m]$ is sorted, $A[m+1\dots r]$ is sorted\\
+            initialize auxiliary array S[0\dots n-1]\\
+            copy A[l\dots r] into S[l\dots r]\\
+            int $i_L \leftarrow l$; itn $i_R \leftarrow m + 1$;\\
+            for \= \+($k \leftarrow l$; $k \leq r$; $k++$) do\\
+                if($i_L > m$) $A[k] \leftarrow S[i_R++]$\\
+                else if ($i_R > r$) $A[k] \leftarrow S[i_L++]$\\
+                else if ($S[i_L] \leq S[i_R]$) $A[k] \leftarrow S[i_L++]$\\
+                else $A[k] \leftarrow S[i_R++]$\\
+    \end{tabbing}
+    So Merge takes time $\Theta(r-l+1)$, which is $\Theta(n)$ time for merging $n$ elements\\
+    Therefore the overall running time of MergeSort is:\\
+
+    $$T(n) = 2T(\frac{n}{2}) + \Theta(n)$$
+
+    Analysis of MergeSort:\\
+    Let $T(n)$ denote the time to run MergeSort on an array of length $n$
+    \begin{itemize}
+        \item Step 1 takes time $\Theta(n)$
+        \item Step 2 takes time $T(\lceil\frac{n}{2}\rceil) + T(\lfloor\frac{n}{2}\rfloor)$
+        \item Step 3 takes time $\Theta(n)$
+    \end{itemize}
+
+    The \red{recurrence relation} for $T(n)$ is as follows:
+
+    $$T(n) = \begin{cases}
+        \begin{tabular}{ll}
+            $T(\lceil\frac{n}{2}\rceil) + T(\lfloor\frac{n}{2}\rfloor) + \Theta(n)$ & if $n > 1$\\
+            $\Theta(1)$ & if $n = 1$\\
+        \end{tabular}
+    \end{cases}$$
+
+    It suffices to consider the following \red{exact recurrence}, with constant factor $c$ replacing $\Theta$'s:
+
+    $$T(n) = \begin{cases}
+        \begin{tabular}{ll}
+            $T(\lceil\frac{n}{2}\rceil) + T(\lfloor\frac{n}{2}\rfloor) + cn$ & if $n > 1$\\
+            $c$ & if $n = 1$\\
+        \end{tabular}
+    \end{cases}$$
+    \bigskip
+
+    The following is the corresponding \red{sloppy recurrence}\\
+    (meaning it has floors and ceilings removed)\\
+    $$T(n) = \begin{cases}
+        \begin{tabular}{ll}
+            $2T(\frac{n}{2}) + cn$ & if $n > 1$\\
+            $c$ & if $n = 1$\\
+        \end{tabular}
+    \end{cases}$$
+    The exact and sloop recurrences are \red{identical} when $n$ is a power of 2\\
+    The recurrence can easily be solved by various methods when $n = 2^j$\\
+    The solution has growth rate $T(n) \in \Theta(n \log n)$\\
+    It is impossible to show that $T(n) \in \Theta(n \log n)$ \red{for all $n$}
+    by analyzing the exact recurrence.\\
+    \pagebreak
+
+    So how to show $T(n) \in \Theta(n \log n)$ when $n = 2^j$?\\
+    \begin{align*}
+        T(n) &= 2T(\frac{n}{2}) + cn\\
+        &= 2(2T(\frac{n}{2^2}) + c\frac{n}{2}) + cn\\
+        &= 2^2T(\frac{n}{2^2}) + 2cn\\
+        &= 2^2(T(\frac{n}{2^3}) + c\frac{n}{2^2}) + 2cn\\
+        &= 2^3T(\frac{n}{2^3}) + 3cn\\
+        &\dots\\
+        &= 2^jT(\frac{n}{2^j}) + jcn\\
+        &= 2^jc + jcn\\
+        &= cn + jcn\\
+        &= cn + cn\log n
+    \end{align*}
+    So $T(n) \in \Theta(n \log n)$\\
+    \bigskip
+
+    Here's another way of proving it:\\
+    We know that $T(n) = 2T(\frac{n}{2}) + cn$.\\
+    So $T(\frac{n}{2}) = 2T(\frac{n}{4}) + c\frac{n}{2}$\\
+    We can draw a tree of the cost of $T(n)$, $T(\frac{n}{2})$, $T(\frac{n}{4})$ and more, and sum them.\\
+    So we get $T(n) = (\log n + 1)cn = cn\log n + cn \in \Theta(n\log n)$
+
+    \bigskip
+
+    \subsection{Common Recurrence Relations}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        Recursion & Resolves to & Example\\
+        \hline
+        $T(n) = T(\frac{n}{2}) + \Theta(1)$ & $T(n) \in \Theta(\log n)$ & Binary search\\
+        \hline
+        $T(n) = 2T(\frac{n}{2}) + \Theta(n)$ & $T(n) \in \Theta(n\log n)$ & Merge sort\\
+        \hline
+        $T(n) = 2T(\frac{n}{2}) + \Theta(\log n)$ & $T(n) \in \Theta(n)$ & Heapify\\
+        \hline
+        $T(n) = T(cn) + \Theta(n)$ for some $0 < c < 1$ & $T(n) \in \Theta(n)$ & Selection\\
+        \hline
+        $T(n) = 2T(\frac{n}{4}) + \Theta(1)$ & $T(n) \in \Theta(\sqrt{n})$ & Range Search\\
+        \hline
+        $T(n) = T(\sqrt{n}) + \Theta(1)$ & $T(n) \in \Theta(\log \log n)$ & Interpolation Search\\
+        \hline
+    \end{tabular}
+    Once you know the result, it is usually easy to prove by induction\\
+    Many more recursions, and some methods to find the result, in CS341\\
+    \pagebreak
+
+    \subsection{Summary \& Helpful formulas}
+    \red{$O$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in O(g(n))$} if there exist constants $C > 0$ and $n_0 > 0$ such that\\
+        $|f(n)| \leq c|g(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    
+    \red{$\Omega$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in \Omega (g(n))$} if there exist constants $c > 0$ and $n_0 > 0$ such that\\
+        $c|g(n)| \leq |f(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    
+    \red{$\Theta$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in \Theta (g(n))$} if there exist constants $c_1, c_2 > 0$, and $n_0 > 0$ such that\\
+        $c_1|g(n)| \leq |f(n)| \leq c_2|g(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    
+    \red{$o$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in o(g(n))$} if for \textbf{\red{all}} constants $c > 0$, there exists a constant $n_0 > 0$ such that\\
+        $|f(n)| < c|g(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    
+    \red{$\omega$-notation}
+    \begin{itemize}
+        \item \red{$f(n) \in \omega (g(n))$} if for \textbf{\red{all}} constants $c > 0$, there exists a constant $n_0 > 0$ such that\\
+        $0 \leq c|g(n)| < |f(n)|$ for all $n \geq n_0$
+    \end{itemize}
+    \bigskip
+
+    \textbf{Useful Sums:}\\
+    \red{Arithmetic sequence}
+    $$\sum_{i=0}^{n-1}(a + di) = na + \frac{dn(n-1)}{2} \in \Theta(n^2) \text{ if } d \neq 0$$
+     
+    \red{Geometric sequence}
+    $$\sum_{i=0}^{n-1}ar^i = \begin{cases}
+        \begin{tabular}{lll}
+            $a\frac{r^n-1}{r-1}$ & $\in \Theta(r^n)$ & if $r > 1$\\
+            $na$ & $\in \Theta(n)$ & if $r = 1$\\
+            $a\frac{1-r^n}{1-r}$ & $\in \Theta(1)$ & if $0 < r < 1$\\
+        \end{tabular}
+    \end{cases}$$
+
+    \red{Harmonic sequence}
+    $$\sum_{i=0}^{n-1}\frac{1}{i} = \ln n + \gamma + o(1) \in \Theta(\log n)$$
+
+    \red{A few more}
+    $$\sum_{i=0}^{n-1}\frac{1}{i^2} = \frac{\pi^2}{6} \in \Theta(1)$$
+    $$\sum_{i=0}^{n-1}i^k \in \Theta(n^k+1) \text{ for } k \geq 0$$
+    \pagebreak
+
+    \subsection{Useful Math Facts}
+    \textbf{Logarithms}\\
+    \begin{itemize}
+        \item $a^{\log_{b}c} = c^{\log_{b}a}$
+        \item $\frac{d}{dx}\ln x = \frac{1}{x}$
+    \end{itemize}
+
+    \textbf{Factorial}\\
+    \begin{itemize}
+        \item $n!$ = number of ways to permute $n$ elements
+        \item $\log(n!) = \log n + \log (n-1) + \dots + \log 1 \in \Theta(n\log n)$
+    \end{itemize}
+
+    \textbf{Probability and moments}\\
+    \begin{itemize}
+        \item (linearity of expectation)
+        \item $E[aX] = aE[X]$
+        \item $E[X+Y] = E[X] + E[Y]$ 
+    \end{itemize}
+    \pagebreak
+
+    \section{Heap}
+    
+
+
 
 \end{document}
