@@ -1,0 +1,124 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{color}
+\usepackage[document]{ragged2e}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usetikzlibrary{arrows,shapes}
+\usepackage[%
+	pdftitle={BU247 Notes},%
+	hidelinks,%
+]{hyperref}
+
+%make macro for coloured text
+\definecolor{red}{RGB}{210,0,0}
+\definecolor{blue}{RGB}{0,0,170}
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\green}[1]{{\color{green}{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow}{#1}}}
+\newcommand{\purple}[1]{{\color{purple}{#1}}}
+\newcommand{\white}[1]{{\color{white}{#1}}}
+
+%override default second layer itemize to circle
+\renewcommand{\labelitemii}{$\circ$}
+
+\begin{document}
+    \clearpage
+    \vspace*{\fill}
+    \begin{center}
+        \begin{minipage}{\textwidth} 
+            \title{BU247 Notes}
+            \author{Jacky Zhao}
+            \date{\today}
+            \maketitle
+        \end{minipage} 
+    \end{center}
+    \vfill
+    \thispagestyle{empty}
+    \newpage
+    \setcounter{page}{1}
+    \pagebreak
+
+    \section{Chapter 2}
+    How management accounting supports internal decision making:
+    \begin{itemize}
+        \item Pricing
+        \begin{itemize}
+            \item Facing a market-determined price, an organization will use product cost information to decide whether its cost structure will allow it to compete profitably
+            \item When the organization can set the price, they often set it so that it is an increment of its product cost - aka \red{cost plus pricing}
+        \end{itemize}
+        \item Product Planning
+        \begin{itemize}
+            \item Organizations use \red{target costing} to focus efforts during product and process design on developing a product that has a good profit potential in view of market requirements
+        \end{itemize}
+        \item Budgeting
+        \begin{itemize}
+            \item Most widespread use of cost info is in budgeting, a management accounting tool that projects income and costs for various levels of production and sales activity
+            \item Budgets provide the basis for earnings forecasts, which is to be issued to the stock market
+        \end{itemize}
+        \item Performance Evaluation
+        \begin{itemize}
+            \item Managers compare the actual results from the budget period with expectations that were reflected in the budget prepared to assess performance
+        \end{itemize}
+        \item Contracting
+        \begin{itemize}
+            \item In cost reimbursement contracts, organizations are reimbursed their cost plus a profit increment for the goods or services they provide under teh contract
+            \item Governments are frequent and large-scale users of this type of contracts
+        \end{itemize}
+    \end{itemize}
+
+    \pagebreak
+
+    \red{Cost Objects}
+    \begin{itemize}
+        \item any item for which a cost is to be determined
+        \item Examples:
+        \begin{itemize}
+            \item products, product lines, production lines, services, organization departments, and even the entire organizations
+        \end{itemize}
+    \end{itemize}
+
+    \red{Direct Cost}
+    \begin{itemize}
+        \item the cost has a direct cause-and-effect relationship with the cost objects
+        \item Defining Characteristic:
+        \begin{itemize}
+            \item the cost would not exist absent the cost object
+        \end{itemize}
+    \end{itemize}
+
+    \red{Indirect Cost}
+    \begin{itemize}
+        \item no direct cause-and-effect relationship with the cost objects
+        \item Example:
+        \begin{itemize}
+            \item weekly wage of car assembly workers (unrelated to \# of car produced)
+            \item However, if we have unit wage of \$20/unit for workers, then this wage becomes direct cost
+        \end{itemize}
+    \end{itemize}
+
+    \red{Variable Costs}
+    \begin{itemize}
+        \item costs that vary directly with some underlying level of activity , such as number of units produced
+        \item \red{Direct material cost} is a form of variable cost
+        \item Defining Characteristic:
+        \begin{itemize}
+            \item total variable cost depends on how much of the resource is used
+            \item resources that are attributable is variable, such as wood used to make a chair cannot be used to make another
+        \end{itemize}
+        \item 
+    \end{itemize}
+
+
+
+\end{document}
