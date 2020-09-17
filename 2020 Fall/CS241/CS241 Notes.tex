@@ -1,0 +1,67 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{color}
+\usepackage[document]{ragged2e}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usetikzlibrary{arrows,shapes}
+\usepackage[%
+	pdftitle={TITLE},%
+	hidelinks,%
+]{hyperref}
+
+%make macro for coloured text
+\definecolor{red}{RGB}{210,0,0}
+\definecolor{blue}{RGB}{0,0,170}
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\green}[1]{{\color{green}{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow}{#1}}}
+\newcommand{\purple}[1]{{\color{purple}{#1}}}
+\newcommand{\white}[1]{{\color{white}{#1}}}
+
+%override default second layer itemize to circle
+\renewcommand{\labelitemii}{$\circ$}
+
+\begin{document}
+
+    
+    \clearpage
+    \vspace*{\fill}
+    \begin{center}
+        \begin{minipage}{\textwidth} 
+            \title{CS241 Notes}
+            \author{Jacky Zhao}
+            \date{\today}
+            \maketitle
+        \end{minipage} 
+    \end{center}
+    \vfill
+    \thispagestyle{empty}
+    \newpage
+    \setcounter{page}{1}
+
+    \section{Module 1: Data Representation}
+    Recall that integers are the underlying data of char. If we have:\\
+    
+    unsigned char a = 88;\\
+
+    Printing a as a char will show "X", while printing a as an int will show "88".\\
+    \bigskip
+
+    If we write a into the file and open it with a text editor, it shows "X". This is because
+    text editors interprets the ASCII value of the content of the file.\\
+    If we open the same file with xxd, which gives raw value, it shows "01001000", the binary representation of 88.\\
+
+    
+
+\end{document}

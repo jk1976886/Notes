@@ -1,0 +1,96 @@
+\documentclass[letterpaper, 12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{color}
+\usepackage[document]{ragged2e}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsfonts,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usetikzlibrary{arrows,shapes}
+\usepackage[%
+	pdftitle={TITLE},%
+	hidelinks,%
+]{hyperref}
+
+%make macro for coloured text
+\definecolor{red}{RGB}{210,0,0}
+\definecolor{blue}{RGB}{0,0,170}
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\green}[1]{{\color{green}{#1}}}
+\newcommand{\yellow}[1]{{\color{yellow}{#1}}}
+\newcommand{\purple}[1]{{\color{purple}{#1}}}
+\newcommand{\white}[1]{{\color{white}{#1}}}
+
+%override default second layer itemize to circle
+\renewcommand{\labelitemii}{$\circ$}
+
+\begin{document}
+
+    
+    \clearpage
+    \vspace*{\fill}
+    \begin{center}
+        \begin{minipage}{\textwidth} 
+            \title{CS251 Notes}
+            \author{Jacky Zhao}
+            \date{\today}
+            \maketitle
+        \end{minipage} 
+    \end{center}
+    \vfill
+    \thispagestyle{empty}
+    \newpage
+    \setcounter{page}{1}
+
+    \section{ARM Overview}
+    What is ARM?\\
+    \begin{itemize}
+        \item Advanced RISC Machines
+        \item RISC: Reduced Instruction Set Computing
+    \end{itemize}
+    We will be learning 64-bit ARM in this course, the textbook teaches ARM (Legv8).\\
+    \bigskip
+    \subsection{Registers}
+    There will be a total of 32 registers. They can be used like variables in a program, but via ARM instruction.\\
+    \begin{itemize}
+        \item each register has 64 bits, or 8 bytes
+        \item X0, X1, ... , X31
+        \item X31 (XZR) always contains 0
+        \item registers are hardware storage containers
+    \end{itemize}
+    \bigskip
+    For example, suppose we have a high level code:\\
+    $$f = (g+h)-(i+j)$$
+    What would be the equivalent in ARM assembly?\\
+    Assumption: the values of the variables are pre-looaded into the registers.\\
+    \bigskip
+    \begin{tabular}{ccccc}
+        X1: f & X2: g & X3: h & X4: i & X5: j\\
+    \end{tabular}
+    \bigskip
+    Here are the ARM instructions:\\
+    ADD X6, X2, X3 ;;X6 holds a temp value\\
+    ADD X7, X4, X5 ;;X7 holds a temp value\\
+    SUB X1, X6, X7 ;;X1 has the final value\\
+    \bigskip
+    ADD, SUB instructions are known as \red{R-format instructions}\\
+
+    \bigskip
+    We are still imcomplete as
+    \begin{itemize}
+        \item we have not store the result into Data Memory (variable f)
+        \item we have not show how to load variables into the registers
+    \end{itemize}
+
+    \bigskip
+    
+
+\end{document}
